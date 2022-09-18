@@ -1,6 +1,6 @@
 {
   "name": "@sourcelib/captions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Source Engine captions library",
   "main": "lib/main.js",
   "scripts": {
