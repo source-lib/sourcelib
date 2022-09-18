@@ -1,94 +1,30 @@
-
-
 # Sourcelib
+![MAINTAINED](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 
-This project was generated using [Nx](https://nx.dev).
+![ESLINT](https://img.shields.io/badge/eslint-3A33D1?style=flat&logo=eslint&logoColor=white)
+![TYPESCRIPT](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
+![NODE.JS](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)
+![JEST](https://img.shields.io/badge/Jest-323330?style=flat&logo=Jest&logoColor=white)
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+A set of TypeScript libraries to work with the Source Engine.
 
-🔎 **Smart, Fast and Extensible Build System**
+This code used to be part of the [Source Engine Support extension for Visual Studio Code](https://github.com/StefanH-AT/Source-Engine-VSCode-Extension).
 
-## Adding capabilities to your workspace
+## Packages
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+This repository containy several packages.
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+| Name | Description | Install |
+| ---- | ----------- | ------- |
+| kv   | Keyvalue file parsing and tokenizer for reading, writing and inspecting keyvalue files | `npm install @sourcelib/kv`
+| fs   | Source Engine virtual filesystem tools to read and write to a game's files | `npm install @sourcelib/fs`
 
-Below are our core plugins:
+## Projects using sourcelib
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+- [Source Engine Support Vscode extension](https://github.com/StefanH-AT/Source-Engine-VSCode-Extension).
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+## License
+This project is licensed under the GNU Public License version 3: [License](LICENSE)
 
-## Generate an application
-
-Run `nx g @nrwl/react:app my-app` to generate an application.
-
-> You can use any of the plugins above to generate applications as well.
-
-When using Nx, you can create multiple applications and libraries in the same workspace.
-
-## Generate a library
-
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
-
-> You can also use any of the plugins above to generate libraries as well.
-
-Libraries are shareable across libraries and applications. They can be imported from `@sourcelib/mylib`.
-
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `nx e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+No code owned by Valve Software has been copied or used as reference. All this code has been written from scratch.
