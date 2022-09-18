@@ -9,7 +9,7 @@ export default {
         "js"
     ],
     "modulePathIgnorePatterns": [
-        "lib"
+        "<rootDir>/lib"
     ],
     "globals": {
         "ts-jest": {
