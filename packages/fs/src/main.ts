@@ -1,5 +1,5 @@
 import { getParentDocumentDirectory } from "./source-fs";
 
-export default {
+export {
     getParentDocumentDirectory
 }

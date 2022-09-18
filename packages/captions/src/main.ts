@@ -1,5 +1,5 @@
 import { ClrTagInfo, Color, populateColorTagMatches } from "./caption-tag-matches";
 
-export default {
+export {
     ClrTagInfo, Color, populateColorTagMatches
 }
