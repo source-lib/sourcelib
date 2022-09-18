@@ -1,13 +1,13 @@
 {
-  "name": "@sourcelib/kv",
-  "version": "0.2.0",
-  "description": "Source Engine KeyValue file parser and tokenizer library",
+  "name": "@sourcelib/captions",
+  "version": "0.1.0",
+  "description": "Source Engine captions library",
   "main": "lib/main.js",
   "scripts": {
     "compile": "tsc -p ./src",
     "watch": "tsc -watch -p ./src",
-    "test": "jest --projects jest.config.ts",
-    "benchmark": "jest --projects bench.config.ts",
+    "test": "jest --passWithNoTests --projects jest.config.ts",
+    "benchmark": "jest --passWithNoTests --projects bench.config.ts",
     "lint": "eslint -c ../../config/.eslintrc.json ./src"
   },
   "repository": {

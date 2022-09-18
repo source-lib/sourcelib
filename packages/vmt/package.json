@@ -1,7 +1,7 @@
 {
-  "name": "@sourcelib/kv",
-  "version": "0.2.0",
-  "description": "Source Engine KeyValue file parser and tokenizer library",
+  "name": "@sourcelib/vmt",
+  "version": "0.1.0",
+  "description": "Source Engine material tools",
   "main": "lib/main.js",
   "scripts": {
     "compile": "tsc -p ./src",
