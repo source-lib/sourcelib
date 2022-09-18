@@ -47,4 +47,4 @@ export default {
     isFloatValue,
     isIntegerValue,
     isScalarValue
-}
+};

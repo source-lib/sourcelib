@@ -6,9 +6,9 @@
   "scripts": {
     "compile": "tsc -p ./src",
     "watch": "tsc -watch -p ./src",
-    "test": "jest --projects jest.config.ts",
-    "benchmark": "jest --projects bench.config.ts",
-    "lint": "eslint ./src"
+    "test": "jest --passWithNoTests --projects jest.config.ts",
+    "benchmark": "jest --passWithNoTests --projects bench.config.ts",
+    "lint": "eslint -c ../../config/.eslintrc.json ./src"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,7 @@
+{
+    "name": "soucelib",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ]
+}
