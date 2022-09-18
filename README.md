@@ -17,10 +17,10 @@ This repository containy several packages.
 
 | Name | Description | Install |
 | ---- | ----------- | ------- |
-| kv   | Keyvalue file parsing and tokenizer for reading, writing and inspecting keyvalue files | `npm install @sourcelib/kv`
-| fs   | Source Engine virtual filesystem tools to read and write to a game's files | `npm install @sourcelib/fs`
-| vmt  | Material file (.vmt) tools | `npm install @sourcelib/vmt`
-| captions | Caption file parsing tools | `npm install @sourcelib/captions`
+| [kv](https://www.npmjs.com/package/@sourcelib/kv)   | Keyvalue file parsing and tokenizer for reading, writing and inspecting keyvalue files | `npm install @sourcelib/kv`
+| [fs](https://www.npmjs.com/package/@sourcelib/fs)   | Source Engine virtual filesystem tools to read and write to a game's files | `npm install @sourcelib/fs`
+| [vmt](https://www.npmjs.com/package/@sourcelib/vmt)  | Material file (.vmt) tools | `npm install @sourcelib/vmt`
+| [captions](https://www.npmjs.com/package/@sourcelib/captions) | Caption file parsing tools | `npm install @sourcelib/captions`
 
 ## Projects using sourcelib
 
