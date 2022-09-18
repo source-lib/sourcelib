@@ -24,6 +24,42 @@ This repository containy several packages.
 
 - [Source Engine Support Vscode extension](https://github.com/StefanH-AT/Source-Engine-VSCode-Extension).
 
+## Development
+
+sourcelib is built using npm workspaces to manage multiple npm packages at once.
+
+**Install**
+```shell
+git clone https://github.com/source-lib/sourcelib.git
+cd sourcelib
+npm install --workspaces
+```
+
+**Compile everything**
+```shell
+npm run compile --workspaces
+```
+
+**Test everything**
+```shell
+npm run test --workspaces
+npm run benchmark --workspaces
+```
+
+**Lint everything**
+```shell
+npm run lint --workspaces
+```
+
+Individual packages are located in the `packages` directory. They can be developed independently just like normal. For example:
+```shell
+cd packages/kv
+npm run test
+```
+
+## Contributing
+If you wish to contribute, please fork the repository and create a pull request!
+
 ## License
 This project is licensed under the GNU Public License version 3: [License](LICENSE)
 
