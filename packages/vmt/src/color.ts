@@ -15,6 +15,10 @@ export class ColorMatchDescription {
     parenthesisType: ColorMatchParenthesisType = ColorMatchParenthesisType.None;
 }
 
+function createInvalidColor(): ColorMatchDescription {
+    return new ColorMatchDescription();
+}
+
 function createOutOfBounds(parenthesisType: ColorMatchParenthesisType): ColorMatchDescription {
     const desc = new ColorMatchDescription();
     desc.validFormat = true;
@@ -71,10 +75,10 @@ export function getColorMatches(colorString: string): ColorMatchDescription {
     if(r > limitMax || r < limitMin || g > limitMax || g < limitMin || b > limitMax || b < limitMin) {
         return createOutOfBounds(parenType);
     }
-    if(!is255) {
-        r *= 255;
-        g *= 255;
-        b *= 255;
+    if(is255) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
     }
 
     return createValid(r, g, b, parenType);
