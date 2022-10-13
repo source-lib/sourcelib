@@ -15,10 +15,6 @@ export class ColorMatchDescription {
     parenthesisType: ColorMatchParenthesisType = ColorMatchParenthesisType.None;
 }
 
-function createInvalidColor(): ColorMatchDescription {
-    return new ColorMatchDescription();
-}
-
 function createOutOfBounds(parenthesisType: ColorMatchParenthesisType): ColorMatchDescription {
     const desc = new ColorMatchDescription();
     desc.validFormat = true;

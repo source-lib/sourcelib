@@ -2,4 +2,4 @@ import { ClrTagInfo, Color, populateColorTagMatches } from "./caption-tag-matche
 
 export {
     ClrTagInfo, Color, populateColorTagMatches
-}
+};

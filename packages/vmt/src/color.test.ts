@@ -1,4 +1,4 @@
-import { getColorMatches, ColorMatchDescription, ColorMatchParenthesisType } from "./color";
+import { getColorMatches, ColorMatchParenthesisType } from "./color";
 
 test("Color Matches Valid 0-255", () => {
     const desc = getColorMatches("{0 255 10}");

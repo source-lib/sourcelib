@@ -42,7 +42,3 @@ export function formatAll(tokens: TokenList, options: FormattingOptions): string
 
     return text;
 }
-
-export function formatLine(tokens: TokenList, line: number, options: FormattingOptions) {
-    const lineTokens = tokens.getAllOnLine(line);
-}
