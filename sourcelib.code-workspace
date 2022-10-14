@@ -1,0 +1,20 @@
+{
+    "folders": [
+        {
+            "name": "captions",
+            "path": "packages/captions"
+        },
+        {
+            "name": "kv",
+            "path": "packages/kv"
+        },
+        {
+            "name": "fs",
+            "path": "packages/fs"
+        },
+        {
+            "name": "vmt",
+            "path": "packages/vmt"
+        }
+    ]
+}

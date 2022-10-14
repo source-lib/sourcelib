@@ -3,7 +3,9 @@ export default {
         ".ts": "ts-jest"
     },
     "testEnvironment": "node",
-    "testRegex": "(/tests?/.*|\\.(test|spec))\\.(ts|js)$",
+    "testMatch": [
+        "<rootDir>/src/**/*.test.ts"
+    ],
     "moduleFileExtensions": [
         "ts",
         "js"
