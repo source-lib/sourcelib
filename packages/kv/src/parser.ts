@@ -1,24 +1,25 @@
 import { Tokenizer } from "tokenizer";
 
 export class Item {
-    private name: string;
+    private key: string;
     private children: Item[] | null;
     private values: string[] | null;
+    private key
 
-    private constructor(name: string) {
-        this.name = name;
+    private constructor(key: string) {
+        this.key = key;
         this.children = null;
         this.values = null;
     }
 
-    public static createLeaf(name: string, value: string[]): Item {
-        const item = new Item(name);
+    public static createLeaf(key: string, value: string[]): Item {
+        const item = new Item(key);
         item.values = value;
         return item;
     }
 
-    public static createContainer(name: string, children: Item[]): Item {
-        const item = new Item(name);
+    public static createContainer(key: string, children: Item[]): Item {
+        const item = new Item(key);
         item.children = children;
         return item;
     }
@@ -35,8 +36,8 @@ export class Item {
         return this.children!;
     }
 
-    public getName(): string {
-        return this.name;
+    public getKey(): string {
+        return this.key;
     }
 }
 
