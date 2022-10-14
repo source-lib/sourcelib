@@ -1,5 +1,4 @@
 import { PositionedLiteral } from "parser-types";
-import { Tokenizer } from "tokenizer";
 
 export class Item {
     private key: PositionedLiteral;
@@ -28,12 +27,12 @@ export class Item {
         return this.children == null;
     }
 
-    public getValues(): string[] {
-        return this.values!;
+    public getValues(): string[] | null {
+        return this.values;
     }
 
-    public getChildren(): Item[] {
-        return this.children!;
+    public getChildren(): Item[] | null {
+        return this.children;
     }
 
     public getKey(): PositionedLiteral {

@@ -7,7 +7,3 @@ test("Item create leaf", () => {
     expect(item1.getValues()).toEqual(["value1", "value2"]);
     expect(item1.getKey().getContent()).toBe("item1");
 });
-
-test("Parse simple", () => {
-
-});
