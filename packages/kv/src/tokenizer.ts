@@ -1,6 +1,6 @@
 import { isWhitespace } from "./string-util";
 import { performance } from "perf_hooks";
-import { TokenList, TokenType, Token, Range } from "./token";
+import { TokenList, TokenType, Token, Range } from "./parser-types";
 
 export class Tokenizer {
 

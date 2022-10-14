@@ -1,5 +1,5 @@
 import { Tokenizer } from "./tokenizer";
-import { Token, TokenList, TokenType } from "./token";
+import { Token, TokenList, TokenType } from "./parser-types";
 import { formatAll, FormattingOptions } from "./formatter";
 import { isWhitespace, isQuoted, stripQuotes, isFloatValue, isIntegerValue, isScalarValue } from "./string-util";
 

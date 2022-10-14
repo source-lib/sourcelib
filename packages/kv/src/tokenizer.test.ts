@@ -4,7 +4,7 @@
 // ==========================================================================
 
 import { Tokenizer } from "./tokenizer";
-import { TokenType } from "./token";
+import { TokenType } from "./parser-types";
 
 test("Tokenize Simple KV", () => {
     const tkn = new Tokenizer();

@@ -1,4 +1,4 @@
-import { TokenList, TokenType } from "./token";
+import { TokenList, TokenType } from "./parser-types";
 
 export interface FormattingOptions {
     braceOnNewline: boolean;
