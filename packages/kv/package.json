@@ -4,6 +4,7 @@
   "description": "Source Engine KeyValue file parser and tokenizer library",
   "main": "lib/main.js",
   "scripts": {
+    "prepublish": "npm run compile",
     "compile": "tsc -p ./src",
     "watch": "tsc -watch -p ./src",
     "test": "jest --projects jest.config.ts",

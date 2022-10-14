@@ -1,9 +1,10 @@
 {
   "name": "@sourcelib/vmt",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Source Engine material tools",
   "main": "lib/main.js",
   "scripts": {
+    "prepublish": "npm run compile",
     "compile": "tsc -p ./src",
     "watch": "tsc -watch -p ./src",
     "test": "jest --projects jest.config.ts",
