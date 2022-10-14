@@ -1,4 +1,5 @@
 # Sourcelib
+[![CI Test](https://github.com/source-lib/sourcelib/actions/workflows/test.yml/badge.svg)](https://github.com/source-lib/sourcelib/actions/workflows/test.yml)
 ![MAINTAINED](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 

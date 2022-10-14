@@ -1,19 +1,23 @@
 {
     "folders": [
         {
-            "name": "captions",
+            "name": "root",
+            "path": "."
+        },
+        {
+            "name": "Captions",
             "path": "packages/captions"
         },
         {
-            "name": "kv",
+            "name": "KeyValues",
             "path": "packages/kv"
         },
         {
-            "name": "fs",
+            "name": "Filesystem",
             "path": "packages/fs"
         },
         {
-            "name": "vmt",
+            "name": "VMT",
             "path": "packages/vmt"
         }
     ]
