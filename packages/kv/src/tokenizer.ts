@@ -33,15 +33,18 @@ export class Tokenizer {
         this._tokens = new TokenList();
         
         let line = 0;
+        let lineColumn = -1;
         let expectingKey = true;
         for(let i = 0; i < textSize; i++) {
             const c = text[i];
+            lineColumn++;
 
             // Skip forward to the next interesting token
             if(c === " " || c === "\t") continue;
             if(c === "\r" || c === "\n") {
                 if(c === "\n") {
                     line++;
+                    lineColumn = -1;
                 }
                 expectingKey = true;
                 continue;
@@ -50,26 +53,27 @@ export class Tokenizer {
             // Is it a comment?
             if(c === "/" && text[i + 1] === "/") {
                 const commentLength = this.consumeComment(i + 2);
-                this.addToken(TokenType.Comment, i, i + commentLength, text.substring(i, i + commentLength), line);
+                this.addToken(TokenType.Comment, lineColumn, lineColumn + commentLength, text.substring(i, i + commentLength), line);
                 i += commentLength - 1;
+                lineColumn += commentLength - 1;
                 continue;
             }
 
             // Is it an object?
             if(c === "{") {
-                this.addToken(TokenType.ObjectStart, i, i, text[i], line);
+                this.addToken(TokenType.ObjectStart, lineColumn, lineColumn + 1, text[i], line);
                 expectingKey = true;
                 continue;
             }
             if(c === "}") {
-                this.addToken(TokenType.ObjectEnd, i, i, text[i], line);
+                this.addToken(TokenType.ObjectEnd, lineColumn, lineColumn + 1, text[i], line);
                 continue;
             }
 
             // Is it a conditional?
             if(c === "[") {
                 const conditionalLength = this.consumeConditional(i);
-                this.addToken(TokenType.Conditional, i, i + conditionalLength, text.substring(i, i + conditionalLength), line);
+                this.addToken(TokenType.Conditional, lineColumn, lineColumn + conditionalLength, text.substring(i, i + conditionalLength), line);
                 i += conditionalLength - 1;
                 continue;
             }
@@ -85,9 +89,10 @@ export class Tokenizer {
                 tokenType = TokenType.PreprocessorKey;
             }
 
-            this.addToken(tokenType, i, i + stringLength, stringContent, line);
+            this.addToken(tokenType, lineColumn, lineColumn + stringLength, stringContent, line);
             if(expectingKey) expectingKey = false;
             i += stringLength - 1; // Prevents skipping the next character after the string
+            lineColumn += stringLength - 1;
             continue;
         }
     }

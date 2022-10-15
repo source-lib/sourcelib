@@ -9,49 +9,48 @@ import { TokenType } from "./parser-types";
 test("Tokenize Simple KV", () => {
     const tkn = new Tokenizer();
     tkn.tokenizeFile(
-        `"File"
-        {
-            "Keyvalues" {
+`"File"
+{
+    "Keyvalues" {
 
-                // A comment
-            
-    \t\t"Quoted Strings"         "a a"  // Comment after the line
-                unquoted_strings        b       // Unquoted strings cannot have spaces
-            
-                integers                130     // 130
-                floats                  5.03    // 
-                in_brackets             500.3
-            
-                "booleans"     \t"true"    //
-                booleans                "false"   //
-            
-                array        \t     "[1.0 0.5 0.0]"     //gf
-                
-    \tmatrix                  "{255 128 0}"       // {}
-            
-            
-                "Subobject" { // yes {}]]}}}}
-                    "key"               "value"
+        // A comment
+    
+\t\t"Quoted Strings"         "a a"  // Comment after the line
+        unquoted_strings        b       // Unquoted strings cannot have spaces
+    
+        integers                130     // 130
+        floats                  5.03    // 
+        in_brackets             500.3
+    
+        "booleans"     \t"true"    //
+        booleans                "false"   //
+    
+        array        \t     "[1.0 0.5 0.0]"     //gf
+        
+\tmatrix                  "{255 128 0}"       // {}
+    
+    
+        "Subobject" { // yes {}]]}}}}
+            "key"               "value"
 
-                    "single quote"      "'"
-            
-                    " string"   "fsdf"
-                }
-            
-                Unquoted
-                {
-                    key val
-                }
-            
-            }
-
-            more                  {
-
-                hello "\\"world\\""
-
-            }
+            "single quote"      "'"
+    
+            " string"   "fsdf"
         }
-    `);
+    
+        Unquoted
+        {
+            key val
+        }
+    
+    }
+
+    more                  {
+
+        hello "\\"world\\""
+
+    }
+}`);
     expect(tkn).toBeDefined;
 
     const tokens = tkn.tokens;
@@ -61,14 +60,24 @@ test("Tokenize Simple KV", () => {
     expect(tokens[0].value).toBe("\"File\"");
     expect(tokens[0].type).toBe(TokenType.Key);
     expect(tokens[0].line).toBe(0);
+    expect(tokens[0].range.start).toBe(0);
+    expect(tokens[0].range.end).toBe(6);
     expect(tokens[1].value).toBe("{");
     expect(tokens[1].line).toBe(1);
+    expect(tokens[1].range.start).toBe(0);
+    expect(tokens[1].range.end).toBe(1);
     expect(tokens[2].value).toBe("\"Keyvalues\"");
     expect(tokens[2].line).toBe(2);
+    expect(tokens[2].range.start).toBe(4);
+    expect(tokens[2].range.end).toBe(15);
     expect(tokens[3].value).toBe("{");
     expect(tokens[3].line).toBe(2);
+    expect(tokens[3].range.start).toBe(16);
+    expect(tokens[3].range.end).toBe(17);
     expect(tokens[4].value).toBe("// A comment");
     expect(tokens[4].line).toBe(4);
+    expect(tokens[4].range.start).toBe(8);
+    expect(tokens[4].range.end).toBe(20);
     expect(tokens[5].value).toBe("\"Quoted Strings\"");
     expect(tokens[5].line).toBe(6);
     expect(tokens[5].type).toBe(TokenType.Key);
