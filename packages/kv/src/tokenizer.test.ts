@@ -3,12 +3,11 @@
 // Tests for keyvalue file tokenizer
 // ==========================================================================
 
-import { Tokenizer } from "./tokenizer";
+import { tokenize, consumeStringUnquoted } from "./tokenizer";
 import { TokenType } from "./parser-types";
 
 test("Tokenize Simple KV", () => {
-    const tkn = new Tokenizer();
-    tkn.tokenizeFile(
+    const tokens = tokenize(
 `"File"
 {
     "Keyvalues" {
@@ -51,9 +50,6 @@ test("Tokenize Simple KV", () => {
 
     }
 }`);
-    expect(tkn).toBeDefined;
-
-    const tokens = tkn.tokens;
     expect(tokens).toBeDefined;
     expect(tokens.length).toBe(53);
 
@@ -93,8 +89,7 @@ test("Tokenize Simple KV", () => {
 });
 
 test("Tokenize preprocessor", () => {
-    const tkn = new Tokenizer();
-    tkn.tokenizeFile(`
+    const tokens = tokenize(`
     // Example file for a file with preprocessor statements
     
     #base "file_this_is_based_on.txt"
@@ -104,9 +99,6 @@ test("Tokenize preprocessor", () => {
         "hello" "world :)"
     }`);
 
-    expect(tkn).toBeDefined();
-
-    const tokens = tkn.tokens;
     expect(tokens.length).toBe(10);
     expect(tokens[0].type).toBe(TokenType.Comment);
     expect(tokens[1].type).toBe(TokenType.PreprocessorKey);
@@ -121,8 +113,7 @@ test("Tokenize preprocessor", () => {
 });
 
 test("Tokenize missing closing quote on string", () => {
-    const tkn = new Tokenizer();
-    tkn.tokenizeFile(`
+    const tokens = tokenize(`
     "test" {
         "key1" value1
         "key2" "value2
@@ -132,9 +123,6 @@ test("Tokenize missing closing quote on string", () => {
         key5 value5
     }`);
 
-    expect(tkn).toBeDefined();
-
-    const tokens = tkn.tokens;
     expect(tokens.length).toBe(12);
     expect(tokens[2].type).toBe(TokenType.Key);
     expect(tokens[2].value).toBe("\"key1\"");
@@ -161,14 +149,10 @@ test("Tokenize missing closing quote on string", () => {
 });
 
 test("Tokenize multiple values", () => {
-    const tkn = new Tokenizer();
-    tkn.tokenizeFile(`Test {
+    const tokens = tokenize(`Test {
         "key1" "v1" v2 v3 4 // comment
     }`);
 
-    expect(tkn).toBeDefined();
-
-    const tokens = tkn.tokens;
     expect(tokens.length).toBe(9);
     expect(tokens[0].type).toBe(TokenType.Key);
     expect(tokens[1].type).toBe(TokenType.ObjectStart);
@@ -184,15 +168,11 @@ test("Tokenize multiple values", () => {
 });
 
 test("Tokenize conditionals", () => {
-    const tkn = new Tokenizer();
-    tkn.tokenizeFile(`Test {
+    const tokens = tokenize(`Test {
         "k1" "v1" [$TEST]
         "k2" "v2" [ $TEST && ( !$DEBUG ) ]
     }`);
 
-    expect(tkn).toBeDefined();
-
-    const tokens = tkn.tokens;
     expect(tokens.length).toBe(9);
     expect(tokens[0].type).toBe(TokenType.Key);
     expect(tokens[1].type).toBe(TokenType.ObjectStart);
@@ -208,11 +188,11 @@ test("Tokenize conditionals", () => {
 });
 
 test("Consume Unquoted string", () => {
-    const tkn = new Tokenizer();
-    tkn.text = "hello_this_is_an_unquoted_string";
-    expect(tkn.consumeStringUnquoted(0)).toBe(tkn.text.length + 1);
-    tkn.text = "key value";
-    expect(tkn.consumeStringUnquoted(0)).toBe(4);
-    expect(tkn.consumeStringUnquoted(4)).toBe(6);
+    let text = "hello_this_is_an_unquoted_string";
+    expect(consumeStringUnquoted(text, 0)).toBe(text.length + 1);
+
+    text = "key value";
+    expect(consumeStringUnquoted(text, 0)).toBe(4);
+    expect(consumeStringUnquoted(text, 4)).toBe(6);
 });
 
