@@ -1,11 +1,11 @@
-import { Tokenizer } from "./tokenizer";
-import { Token, TokenList, TokenType } from "./parser-types";
+import { tokenize } from "./tokenizer";
+import { Token, TokenList, TokenType, Position, PositionedLiteral, Range, Item, ParseError, ParseErrorType, Document } from "./parser-types";
 import { formatAll, FormattingOptions } from "./formatter";
 import { isWhitespace, isQuoted, stripQuotes, isFloatValue, isIntegerValue, isScalarValue } from "./string-util";
 
 export {
-    Tokenizer,
-    Token, TokenList, TokenType,
+    tokenize,
+    Token, TokenList, TokenType, Position, PositionedLiteral, Range, Item, ParseError, ParseErrorType, Document,
     formatAll, FormattingOptions,
     isWhitespace, isQuoted, stripQuotes, isFloatValue, isIntegerValue, isScalarValue
 };

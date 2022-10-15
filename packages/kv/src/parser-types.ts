@@ -40,6 +40,26 @@ export class TokenList extends Array<Token> {
 
 }
 
+export class ParseError {
+
+    public type: ParseErrorType;
+    public range: Range;
+
+    constructor(type: ParseErrorType, range: Range) {
+        this.type = type;
+        this.range = range;
+    }
+
+}
+
+export enum ParseErrorType {
+    MissingValue,
+    MissingKey,
+    MissingClosingBrace,
+    UnexpectedClosingBrace,
+    MissingRootObject,
+}
+
 export class Range {
     public start: number;
     public end: number;
@@ -103,6 +123,80 @@ export class PositionedLiteral {
         const newPosition = new Position(this.position.line, newRange);
         const newContent = stripQuotes(this.content);
         return new PositionedLiteral(newPosition, newContent);
+    }
+
+}
+
+export class Item {
+
+    private parent: Item | null;
+    private key: PositionedLiteral;
+    private children: Item[] | null;
+    private values: PositionedLiteral[] | null;
+
+    private constructor(key: PositionedLiteral, parent: Item | null) {
+        this.key = key;
+        this.children = null;
+        this.values = null;
+        this.parent = parent;
+    }
+
+    public static createLeaf(parent: Item | null, key: PositionedLiteral, value: PositionedLiteral[]): Item {
+        const item = new Item(key, parent);
+        item.values = value;
+        return item;
+    }
+
+    public static createContainer(parent: Item | null, key: PositionedLiteral, children: Item[] = []): Item {
+        const item = new Item(key, parent);
+        item.children = children;
+        return item;
+    }
+
+    public isLeaf(): boolean {
+        return this.children == null;
+    }
+
+    public getValues(): PositionedLiteral[] | null {
+        return this.values;
+    }
+
+    public getChildren(): Item[] | null {
+        return this.children;
+    }
+
+    public getKey(): PositionedLiteral {
+        return this.key;
+    }
+
+    public addChild(child: Item): void {
+        if( this.children == null ) {
+            this.children = [];
+        }
+        this.children.push(child);
+    }
+
+    public getParent(): Item | null {
+        return this.parent;
+    }
+
+    public isRoot(): boolean {
+        return this.parent == null;
+    }
+}
+
+export class Document {
+
+    private rootItems: Item[];
+    private errors: ParseError[];
+
+    public constructor(rootItems: Item[], errors: ParseError[]) {
+        this.rootItems = rootItems;
+        this.errors = errors;
+    }
+
+    public getRootItems(): Item[] {
+        return this.rootItems;
     }
 
 }
