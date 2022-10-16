@@ -127,28 +127,40 @@ export class PositionedLiteral {
 
 }
 
+export class Conditional {
+    public conditionalString: string;
+    public position: Position;
+
+    constructor(conditionalString: string, position: Position) {
+        this.conditionalString = conditionalString;
+        this.position = position;
+    }
+}
+
 export class Item {
 
     private parent: Item | null;
     private key: PositionedLiteral;
     private children: Item[] | null;
     private values: PositionedLiteral[] | null;
+    private condition: Conditional | null;
 
-    private constructor(key: PositionedLiteral, parent: Item | null) {
+    private constructor(key: PositionedLiteral, parent: Item | null, condition: Conditional | null) {
         this.key = key;
         this.children = null;
         this.values = null;
         this.parent = parent;
+        this.condition = condition;
     }
 
-    public static createLeaf(parent: Item | null, key: PositionedLiteral, value: PositionedLiteral[]): Item {
-        const item = new Item(key, parent);
+    public static createLeaf(parent: Item | null, key: PositionedLiteral, value: PositionedLiteral[], condition: Conditional | null = null): Item {
+        const item = new Item(key, parent, condition);
         item.values = value;
         return item;
     }
 
-    public static createContainer(parent: Item | null, key: PositionedLiteral, children: Item[] = []): Item {
-        const item = new Item(key, parent);
+    public static createContainer(parent: Item | null, key: PositionedLiteral, children: Item[], condition: Conditional | null = null): Item {
+        const item = new Item(key, parent, condition);
         item.children = children;
         return item;
     }
@@ -182,6 +194,14 @@ export class Item {
 
     public isRoot(): boolean {
         return this.parent == null;
+    }
+
+    public getCondition(): Conditional | null {
+        return this.condition;
+    }
+
+    public hasCondition(): boolean {
+        return this.condition != null;
     }
 }
 
