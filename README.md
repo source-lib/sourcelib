@@ -64,6 +64,6 @@ npm run test
 If you wish to contribute, please fork the repository and create a pull request!
 
 ## License
-This project is licensed under the GNU Public License version 3: [License](LICENSE)
+This project is licensed under the MIT License: [License](LICENSE)
 
 No code owned by Valve Software has been copied or used as reference. All this code has been written from scratch.
