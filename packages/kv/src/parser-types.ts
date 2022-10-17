@@ -43,11 +43,11 @@ export class TokenList extends Array<Token> {
 export class ParseError {
 
     public type: ParseErrorType;
-    public range: Range;
+    public position: Position;
 
-    constructor(type: ParseErrorType, range: Range) {
+    constructor(type: ParseErrorType, position: Position) {
         this.type = type;
-        this.range = range;
+        this.position = position;
     }
 
 }
@@ -217,6 +217,10 @@ export class Document {
 
     public getRootItems(): Item[] {
         return this.rootItems;
+    }
+
+    public getErrors(): ParseError[] {
+        return this.errors;
     }
 
 }

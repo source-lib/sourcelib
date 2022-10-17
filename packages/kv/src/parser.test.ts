@@ -1,3 +1,6 @@
+/* eslint @typescript-eslint/no-non-null-assertion: 0 */
+
+import { ParseErrorType } from "./parser-types";
 import * as parser from "./parser";
 
 test("Parse simple", () => {
@@ -16,7 +19,8 @@ test("Parse simple", () => {
     }
 }`;
     const kvTree = parser.parseText(kvFile);
-
+    
+    expect(kvTree.getErrors().length).toBe(0);
     expect(kvTree.getRootItems().length).toBe(1);
     const root = kvTree.getRootItems()[0];
     expect(root.getKey().getContent()).toBe("Test");
@@ -76,7 +80,7 @@ test("Parse simple", () => {
     expect(item3.getChildren()).not.toBeNull();
     expect(item3.getChildren()!.length).toBe(1);
 
-    const item4 = item3.getChildren()![0]
+    const item4 = item3.getChildren()![0];
     expect(item4.isRoot()).toBeFalsy();
     expect(item4.isLeaf()).toBeTruthy();
     expect(item4.getParent()).toBe(item3);
@@ -155,6 +159,7 @@ test("Parse with condition", () => {
 }`;
 
     const kvTree = parser.parseText(kvFile);
+    expect(kvTree.getErrors().length).toBe(0);
     const root = kvTree.getRootItems()[0];
     expect(root.hasCondition()).toBeFalsy();
     expect(root.getCondition()).toBeNull();
@@ -182,6 +187,7 @@ Test2 {
 }`;
 
     const kvTree = parser.parseText(kvFile);
+    expect(kvTree.getErrors().length).toBe(0);
     expect(kvTree.getRootItems().length).toBe(2);
     const root1 = kvTree.getRootItems()[0];
     expect(root1.getKey().getContent()).toBe("Test1");
@@ -213,4 +219,33 @@ test("Parse multiple values", () => {
     expect(root.getChildren()![0].getValues()![0].getContent()).toBe("\"value1\"");
     expect(root.getChildren()![0].getValues()![1].getContent()).toBe("\"value2\"");
 
-})
+});
+
+test("Parse Error No Root", () => {
+
+    const kvFile = 
+`"key" "value"
+
+"Elem" {
+    "legalkey" "legalvalue"
+}
+
+"key2" "value2"
+`;
+    const kvTree = parser.parseText(kvFile);
+    expect(kvTree.getRootItems().length).toBe(1);
+    expect(kvTree.getErrors().length).toBe(2);
+
+    const err1 = kvTree.getErrors()[0];
+    expect(err1.type).toBe(ParseErrorType.MissingRootObject);
+    expect(err1.position.line).toBe(0);
+    expect(err1.position.range.start).toBe(0);
+    expect(err1.position.range.end).toBe(13);
+
+    const err2 = kvTree.getErrors()[1];
+    expect(err2.type).toBe(ParseErrorType.MissingRootObject);
+    expect(err2.position.line).toBe(6);
+    expect(err2.position.range.start).toBe(0);
+    expect(err2.position.range.end).toBe(15);
+
+});

@@ -8,7 +8,7 @@ import { TokenType } from "./parser-types";
 
 test("Tokenize Simple KV", () => {
     const tokens = tokenize(
-`"File"
+        `"File"
 {
     "Keyvalues" {
 

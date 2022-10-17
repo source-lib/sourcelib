@@ -1,5 +1,5 @@
 import { tokenize } from "./tokenizer";
-import { Conditional, Document, Item, ParseError, ParseErrorType, Position, PositionedLiteral, Token, TokenList, TokenType } from "./parser-types";
+import { Conditional, Document, Item, ParseError, ParseErrorType, Position, PositionedLiteral, Range, Token, TokenList, TokenType } from "./parser-types";
 
 export function parseText(text: string): Document {
     const tokens = tokenize(text);
@@ -26,19 +26,25 @@ export function parseTokens(tokens: TokenList): Document {
         // KV set is done
         if(keyToken != null && keyToken.line !== token.line) {
             if(valueTokens.length == 0) {
-                const error = new ParseError(ParseErrorType.MissingValue, keyToken.range);
+                
+                const error = new ParseError(ParseErrorType.MissingValue, new Position(keyToken.line, keyToken.range));
                 errors.push(error);
             }
 
-            const key = new PositionedLiteral(new Position(keyToken.line, keyToken.range), keyToken.value);
-            const values = valueTokens.map(t => new PositionedLiteral(new Position(t.line, t.range), t.value));
-            const condition: Conditional | null = conditionToken == null ? null : new Conditional(conditionToken.value, new Position(conditionToken.line, conditionToken.range));
-            const item = Item.createLeaf(currentParent, key, values, condition);
-
             if(currentParent == null) {
-                const error = new ParseError(ParseErrorType.MissingRootObject, keyToken.range);
+                let end: number; // This code is copy pasted from down below. Definitely need to refactor this parser
+                if(valueTokens.length > 0) {
+                    end = valueTokens[valueTokens.length - 1].range.end;
+                } else {
+                    end = keyToken.range.end;
+                }
+                const error = new ParseError(ParseErrorType.MissingRootObject, new Position(keyToken.line, new Range(keyToken.range.start, end)));
                 errors.push(error);
             } else {
+                const key = new PositionedLiteral(new Position(keyToken.line, keyToken.range), keyToken.value);
+                const values = valueTokens.map(t => new PositionedLiteral(new Position(t.line, t.range), t.value));
+                const condition: Conditional | null = conditionToken == null ? null : new Conditional(conditionToken.value, new Position(conditionToken.line, conditionToken.range));
+                const item = Item.createLeaf(currentParent, key, values, condition);
                 currentParent.addChild(item);
             }
 
@@ -65,7 +71,7 @@ export function parseTokens(tokens: TokenList): Document {
 
         if(token.type === TokenType.ObjectStart) {
             if(keyToken == null) {
-                const error = new ParseError(ParseErrorType.MissingKey, token.range);
+                const error = new ParseError(ParseErrorType.MissingKey, new Position(token.line, token.range));
                 errors.push(error);
                 continue;
             }
@@ -88,7 +94,7 @@ export function parseTokens(tokens: TokenList): Document {
 
         if(token.type === TokenType.ObjectEnd) {
             if(currentParent == null) {
-                const error = new ParseError(ParseErrorType.UnexpectedClosingBrace, token.range);
+                const error = new ParseError(ParseErrorType.UnexpectedClosingBrace, new Position(token.line, token.range));
                 errors.push(error);
             } else {
                 currentParent = currentParent.getParent();
@@ -102,6 +108,18 @@ export function parseTokens(tokens: TokenList): Document {
             continue;
         }
 
+    }
+
+    if(keyToken != null) {
+        if(currentParent == null) {
+            let end: number;
+            if(valueTokens.length > 0) {
+                end = valueTokens[valueTokens.length - 1].range.end;
+            } else {
+                end = keyToken.range.end;
+            }
+            errors.push(new ParseError(ParseErrorType.MissingRootObject, new Position(keyToken.line, new Range(keyToken.range.start, end))));
+        }
     }
 
     return new Document(roots, errors);
