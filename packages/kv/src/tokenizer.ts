@@ -39,9 +39,9 @@ function tokenizeInternal(text: string): TokenList {
         if(c === "/" && text[i + 1] === "/") {
             const commentLength = consumeComment(text, i + 2);
             tokenList.push(new Token(TokenType.Comment, 
-                                    new Range(lineColumn, lineColumn + commentLength), 
-                                    text.substring(i, i + commentLength), 
-                                    line));
+                new Range(lineColumn, lineColumn + commentLength), 
+                text.substring(i, i + commentLength), 
+                line));
             i += commentLength - 1;
             lineColumn += commentLength - 1;
             continue;
@@ -50,17 +50,17 @@ function tokenizeInternal(text: string): TokenList {
         // Is it an object?
         if(c === "{") {
             tokenList.push(new Token(TokenType.ObjectStart, 
-                                    new Range(lineColumn, lineColumn + 1), 
-                                    text[i], 
-                                    line));
+                new Range(lineColumn, lineColumn + 1), 
+                text[i], 
+                line));
             expectingKey = true;
             continue;
         }
         if(c === "}") {
             tokenList.push(new Token(TokenType.ObjectEnd, 
-                                    new Range(lineColumn, lineColumn + 1), 
-                                    text[i], 
-                                    line));
+                new Range(lineColumn, lineColumn + 1), 
+                text[i], 
+                line));
             continue;
         }
 
@@ -68,9 +68,9 @@ function tokenizeInternal(text: string): TokenList {
         if(c === "[") {
             const conditionalLength = consumeConditional(text, i);
             tokenList.push(new Token(TokenType.Conditional, 
-                                    new Range(lineColumn, lineColumn + conditionalLength), 
-                                    text.substring(i, i + conditionalLength), 
-                                    line));
+                new Range(lineColumn, lineColumn + conditionalLength), 
+                text.substring(i, i + conditionalLength), 
+                line));
             i += conditionalLength - 1;
             continue;
         }
@@ -87,9 +87,9 @@ function tokenizeInternal(text: string): TokenList {
         }
 
         tokenList.push(new Token(tokenType, 
-                                new Range(lineColumn, lineColumn + stringLength), 
-                                stringContent, 
-                                line));
+            new Range(lineColumn, lineColumn + stringLength), 
+            stringContent, 
+            line));
         if(expectingKey) expectingKey = false;
         i += stringLength - 1; // Prevents skipping the next character after the string
         lineColumn += stringLength - 1;
