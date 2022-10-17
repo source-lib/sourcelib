@@ -1,12 +1,12 @@
 export class ShaderParam {
 
     public name: string;
-    public type: string;
+    public type: ShaderParamType;
     public defaultCompletion?: string | boolean | number;
     public description?: string;
     public wikiUri?: string;
 
-    constructor(name: string, type: string, defaultCompletion: string, description: string, wikiUri: string) {
+    constructor(name: string, type: ShaderParamType, defaultCompletion: string, description: string, wikiUri: string) {
         this.name = name;
         this.type = type;
         this.defaultCompletion = defaultCompletion;
@@ -15,6 +15,8 @@ export class ShaderParam {
     }
 
 }
+
+export type ShaderParamType = "texture" | "material" | "color" | "scalar" | "float" | "int" | "bool" | "vector" | "matrix" | "string" | "unknown";
 
 export class ShaderParamHint {
 
