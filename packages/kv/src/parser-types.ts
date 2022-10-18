@@ -120,10 +120,14 @@ export class PositionedLiteral {
     public asUnquoted(): PositionedLiteral {
         if( !this.isQuoted() ) return this;
 
-        const newRange = new Range(this.position.range.start + 1, this.position.range.end - 1);
-        const newPosition = new Position(this.position.line, newRange);
         const newContent = stripQuotes(this.content);
-        return new PositionedLiteral(newPosition, newContent);
+        if(this.hasPosition()) {
+            const newRange = new Range(this.position!.range.start + 1, this.position!.range.end - 1);
+            const newPosition = new Position(this.position!.line, newRange);
+            return new PositionedLiteral(newPosition, newContent);
+        } else {
+            return new PositionedLiteral(null, newContent);
+        }
     }
 
 }
@@ -167,7 +171,7 @@ export class Item {
     }
 
     public isLeaf(): boolean {
-        return this.children == null;
+        return this.children == null && this.values != null;
     }
 
     public getValues(): PositionedLiteral[] | null {
