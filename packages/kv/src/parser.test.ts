@@ -1,4 +1,3 @@
-/* eslint @typescript-eslint/no-non-null-assertion: 0 */
 
 import { ParseErrorType } from "./parser-types";
 import * as parser from "./parser";

@@ -1,4 +1,4 @@
-import { Document, Item, Position, PositionedLiteral, Range, TokenList, TokenType } from "./parser-types";
+import { Item, PositionedLiteral, Range, TokenList, TokenType } from "./parser-types";
 
 export interface FormattingOptions {
     braceOnNewline: boolean;
@@ -42,19 +42,19 @@ export function formatAll(tokens: TokenList, options: FormattingOptions): string
 
     return text;
 }
-
+/*
 export function formatDocument(document: Document, options: FormattingOptions): Document {
-
+    
 }
 
 export function formatIndentation(document: Document): Document {
 
-    let indent = 0;
+    const indent = 0;
     document.getRootItems().forEach(root => {
         indentItem(root, indent);
     });
 }
-
+*/
 export function indentItem(item: Item, indentLevel: number): Item {
     const key = item.getKey();
     if(item.isLeaf()) {
