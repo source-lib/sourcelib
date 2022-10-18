@@ -249,3 +249,49 @@ test("Parse Error No Root", () => {
     expect(err2.position.range.end).toBe(15);
 
 });
+
+test("Parse Error No Values", () => {
+
+    const kvFile =
+`Tests {
+    key1
+    key2
+
+    key3 value1
+}`;
+
+    const kvTree = parser.parseText(kvFile);
+    expect(kvTree.getRootItems().length).toBe(1);
+    expect(kvTree.getErrors().length).toBe(2);
+
+    const root = kvTree.getRootItems()[0];
+    expect(root.isRoot()).toBeTruthy();
+    expect(root.isLeaf()).toBeFalsy();
+    expect(root.getChildren()!.length).toBe(3);
+
+    const item1 = root.getChildren()![0];
+    expect(item1.isLeaf()).toBeTruthy();
+    expect(item1.getKey().getContent()).toBe("key1");
+    expect(item1.getValues()!.length).toBe(0);
+
+    const item2 = root.getChildren()![1];
+    expect(item2.isLeaf()).toBeTruthy();
+    expect(item2.getKey().getContent()).toBe("key2");
+    expect(item2.getValues()!.length).toBe(0);
+
+    const item3 = root.getChildren()![2];
+    expect(item3.isLeaf()).toBeTruthy();
+    expect(item3.getKey().getContent()).toBe("key3");
+    expect(item3.getValues()!.length).toBe(1);
+
+    const errors = kvTree.getErrors();
+    expect(errors[0].type).toBe(ParseErrorType.MissingValue);
+    expect(errors[0].position.line).toBe(1);
+    expect(errors[0].position.range.start).toBe(4);
+    expect(errors[0].position.range.end).toBe(8);
+    expect(errors[1].type).toBe(ParseErrorType.MissingValue);
+    expect(errors[1].position.line).toBe(2);
+    expect(errors[1].position.range.start).toBe(4);
+    expect(errors[1].position.range.end).toBe(8);
+
+});
