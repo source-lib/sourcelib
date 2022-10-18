@@ -71,7 +71,7 @@ export function parseTokens(tokens: TokenList): Document {
 
         if(token.type === TokenType.ObjectStart) {
             if(keyToken == null) {
-                const error = new ParseError(ParseErrorType.MissingKey, new Position(token.line, token.range));
+                const error = new ParseError(ParseErrorType.UnexpectedOpeningBrace, new Position(token.line, token.range));
                 errors.push(error);
                 continue;
             }

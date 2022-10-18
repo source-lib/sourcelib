@@ -295,3 +295,38 @@ test("Parse Error No Values", () => {
     expect(errors[1].position.range.end).toBe(8);
 
 });
+
+test("Parse Error Unexpected Opening Brace", () => {
+    const kvFile = 
+`Test {
+    {
+
+
+}`;
+
+    const kvTree = parser.parseText(kvFile);
+    expect(kvTree.getRootItems().length).toBe(1);
+    expect(kvTree.getErrors().length).toBe(1);
+    const err = kvTree.getErrors()[0];
+    expect(err.type).toBe(ParseErrorType.UnexpectedOpeningBrace);
+    expect(err.position.line).toBe(1);
+    expect(err.position.range.start).toBe(4);
+    expect(err.position.range.end).toBe(5);
+});
+
+test("Parse Error Unexpected Closing Brace", () => {
+    const kvFile = 
+`Test {
+    "key" "value"
+    }
+}`;
+
+    const kvTree = parser.parseText(kvFile);
+    expect(kvTree.getRootItems().length).toBe(1);
+    expect(kvTree.getErrors().length).toBe(1);
+    const err = kvTree.getErrors()[0];
+    expect(err.type).toBe(ParseErrorType.UnexpectedClosingBrace);
+    expect(err.position.line).toBe(3);
+    expect(err.position.range.start).toBe(0);
+    expect(err.position.range.end).toBe(1);
+});

@@ -56,6 +56,7 @@ export enum ParseErrorType {
     MissingValue,
     MissingKey,
     MissingClosingBrace,
+    UnexpectedOpeningBrace,
     UnexpectedClosingBrace,
     MissingRootObject,
 }
