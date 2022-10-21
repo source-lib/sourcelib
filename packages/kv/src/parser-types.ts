@@ -22,6 +22,18 @@ export class Token {
         this.value = value;
         this.line = line;
     }
+
+    public toLiteral(): Literal {
+        return new Literal(this.getPosition(), this.value);
+    }
+    
+    public getPosition(): Position {
+        return new Position(this.line, this.range);
+    }
+
+    public toConditional(): Conditional {
+        return new Conditional(this.value, this.getPosition());
+    }
 }
 
 export class TokenList extends Array<Token> {
@@ -62,12 +74,54 @@ export enum ParseErrorType {
 }
 
 export class Range {
-    public start: number;
-    public end: number;
+    private start: number;
+    private end: number;
 
     constructor(start: number, end: number) {
         this.start = start;
         this.end = end;
+    }
+
+    public copy(): Range {
+        return new Range(this.start, this.end);
+    }
+
+    public getStart(): number {
+        return this.start;
+    }
+
+    public getEnd(): number {
+        return this.end;
+    }
+
+    public moveBy(delta: number): void {
+        this.start += delta;
+        this.end += delta;
+    }
+
+    public moveTo(start: number, end: number): void {
+        this.start = start;
+        this.end = end;
+    }
+
+    public moveStartTo(start: number): void {
+        this.start = start;
+    }
+
+    public moveEndTo(end: number): void {
+        this.end = end;
+    }
+
+    public moveStartBy(delta: number): void {
+        this.start += delta;
+    }
+
+    public moveEndBy(delta: number): void {
+        this.end += delta;
+    }
+
+    public isValid(): boolean {
+        return this.start < this.end;
     }
 
     public getLength(): number {
@@ -80,16 +134,24 @@ export class Range {
 }
 
 export class Position {
-    public line: number;
-    public range: Range;
+    private line: number;
+    private range: Range;
 
     constructor(line: number, range: Range) {
         this.line = line;
         this.range = range;
     }
+
+    public getLine(): number {
+        return this.line;
+    }
+
+    public getRange(): Range {
+        return this.range;
+    }
 }
 
-export class PositionedLiteral {
+export class Literal {
     private position: Position;
     private content: string;
 
@@ -116,41 +178,53 @@ export class PositionedLiteral {
     public getContent(): string {
         return this.content;
     }
-
-    public asUnquoted(): PositionedLiteral {
+    
+    public asUnquoted(): Literal {
         if( !this.isQuoted() ) return this;
-
-        const newContent = stripQuotes(this.content);
-        if(this.hasPosition()) {
-            const newRange = new Range(this.position!.range.start + 1, this.position!.range.end - 1);
-            const newPosition = new Position(this.position!.line, newRange);
-            return new PositionedLiteral(newPosition, newContent);
-        } else {
-            return new PositionedLiteral(null, newContent);
-        }
+        
+        const newContent = stripQuotes(this.getContent());
+        const newRange = this.getPosition().getRange().copy();
+        newRange.moveStartBy(1);
+        newRange.moveEndBy(-1);
+        const newPosition = new Position(this.getPosition()!.getLine(), newRange);
+        return new Literal(newPosition, newContent);
     }
 
+    public isValid(): boolean {
+        return this.getContent().length === this.getPosition().getRange().getLength();
+    }
+    
 }
 
 export class Conditional {
-    public conditionalString: string;
-    public position: Position;
+    private conditionalString: string;
+    private position: Position;
 
     constructor(conditionalString: string, position: Position) {
         this.conditionalString = conditionalString;
         this.position = position;
+    }
+
+    public getPosition(): Position {
+        return this.position;
+    }
+
+    public getConditionalString(): string {
+        return this.conditionalString;
     }
 }
 
 export class Item {
 
     private parent: Item | null;
-    private key: PositionedLiteral;
+    private key: Literal;
     private children: Item[] | null;
-    private values: PositionedLiteral[] | null;
+    private values: Literal[] | null;
     private condition: Conditional | null;
+    private openingBrace: Literal;
+    private closingBrace: Literal;
 
-    private constructor(key: PositionedLiteral, parent: Item | null, condition: Conditional | null) {
+    private constructor(key: Literal, parent: Item | null, condition: Conditional | null) {
         this.key = key;
         this.children = null;
         this.values = null;
@@ -158,13 +232,13 @@ export class Item {
         this.condition = condition;
     }
 
-    public static createLeaf(parent: Item | null, key: PositionedLiteral, value: PositionedLiteral[], condition: Conditional | null = null): Item {
+    public static createLeaf(parent: Item | null, key: Literal, value: Literal[], condition: Conditional | null = null): Item {
         const item = new Item(key, parent, condition);
         item.values = value;
         return item;
     }
 
-    public static createContainer(parent: Item | null, key: PositionedLiteral, children: Item[], condition: Conditional | null = null): Item {
+    public static createContainer(parent: Item | null, key: Literal, children: Item[], condition: Conditional | null = null): Item {
         const item = new Item(key, parent, condition);
         item.children = children;
         return item;
@@ -174,7 +248,7 @@ export class Item {
         return this.children == null && this.values != null;
     }
 
-    public getValues(): PositionedLiteral[] | null {
+    public getValues(): Literal[] | null {
         return this.values;
     }
 
@@ -182,7 +256,7 @@ export class Item {
         return this.children;
     }
 
-    public getKey(): PositionedLiteral {
+    public getKey(): Literal {
         return this.key;
     }
 
@@ -191,6 +265,10 @@ export class Item {
             this.children = [];
         }
         this.children.push(child);
+    }
+
+    public replaceChildren(children: Item[]): void {
+        this.children = children;
     }
 
     public getParent(): Item | null {
@@ -207,6 +285,22 @@ export class Item {
 
     public hasCondition(): boolean {
         return this.condition != null;
+    }
+
+    public startPopulatingContainer(openingBrace: Literal): void {
+        this.openingBrace = openingBrace;
+    }
+
+    public endPopulatingContainer(closingBrace: Literal): void {
+        this.closingBrace = closingBrace;
+    }
+
+    public getOpeningBrace(): Literal {
+        return this.openingBrace;
+    }
+
+    public getClosingBrace(): Literal {
+        return this.closingBrace;
     }
 }
 
@@ -226,6 +320,15 @@ export class Document {
 
     public getErrors(): ParseError[] {
         return this.errors;
+    }
+
+    public hasErrors(): boolean {
+        return this.errors.length > 0;
+    }
+
+    public toStringPreservePositions(): string {
+        
+        return "";
     }
 
 }

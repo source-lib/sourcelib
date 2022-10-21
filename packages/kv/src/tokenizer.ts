@@ -127,15 +127,7 @@ export function consumeString(text: string, i: number): number {
 
     // Is it quoted?
     if(c === "\"" || c === "'") {
-        
-        // Multiline?
-        if(text[i + 0] === "\"" &&
-            text[i + 1] === "\"" &&
-            text[i + 2] === "\"") {
-            return consumeStringMultiline(text, i + 3);
-        } else {
-            return consumeStringQuoted(text, i + 1, c);
-        }
+        return consumeStringQuoted(text, i + 1, c);
     } else {
         return consumeStringUnquoted(text, i + 1);
     }
@@ -169,33 +161,6 @@ export function consumeStringQuoted(text: string, i: number, startingQuote: stri
     }
 
     return n + 1;
-}
-
-export function consumeStringMultiline(text: string, i: number): number {
-    let n = 1;
-    let escaped = false;
-    let c = text[i];
-    for(; c != null; c = text[i + n]) {
-        if(c === "\\") {
-            escaped = true;
-            continue;
-        }
-
-        if(c === "\"") {
-            if(escaped) continue;
-            
-            const c1 = text[i + n + 1];
-            const c2 = text[i + n + 2];
-
-            if(c1 === "\"" && c2 === "\"") {
-                break;
-            }
-        }
-
-        n++;
-    }
-
-    return n + 5;
 }
 
 export function consumeStringUnquoted(text: string, i: number): number {

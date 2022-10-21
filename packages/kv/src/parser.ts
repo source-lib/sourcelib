@@ -1,5 +1,5 @@
 import { tokenize } from "./tokenizer";
-import { Conditional, Document, Item, ParseError, ParseErrorType, Position, PositionedLiteral, Range, Token, TokenList, TokenType } from "./parser-types";
+import { Conditional, Document, Item, ParseError, ParseErrorType, Position, Literal, Range, Token, TokenList, TokenType } from "./parser-types";
 
 export function parseText(text: string): Document {
     const tokens = tokenize(text);
@@ -27,23 +27,23 @@ export function parseTokens(tokens: TokenList): Document {
         if(keyToken != null && keyToken.line !== token.line) {
             if(valueTokens.length == 0) {
                 
-                const error = new ParseError(ParseErrorType.MissingValue, new Position(keyToken.line, keyToken.range));
+                const error = new ParseError(ParseErrorType.MissingValue, keyToken.getPosition());
                 errors.push(error);
             }
 
             if(currentParent == null) {
                 let end: number; // This code is copy pasted from down below. Definitely need to refactor this parser
                 if(valueTokens.length > 0) {
-                    end = valueTokens[valueTokens.length - 1].range.end;
+                    end = valueTokens[valueTokens.length - 1].range.getEnd();
                 } else {
-                    end = keyToken.range.end;
+                    end = keyToken.range.getEnd();
                 }
-                const error = new ParseError(ParseErrorType.MissingRootObject, new Position(keyToken.line, new Range(keyToken.range.start, end)));
+                const error = new ParseError(ParseErrorType.MissingRootObject, new Position(keyToken.line, new Range(keyToken.range.getStart(), end)));
                 errors.push(error);
             } else {
-                const key = new PositionedLiteral(new Position(keyToken.line, keyToken.range), keyToken.value);
-                const values = valueTokens.map(t => new PositionedLiteral(new Position(t.line, t.range), t.value));
-                const condition: Conditional | null = conditionToken == null ? null : new Conditional(conditionToken.value, new Position(conditionToken.line, conditionToken.range));
+                const key = keyToken.toLiteral();
+                const values = valueTokens.map(t => new Literal(new Position(t.line, t.range), t.value));
+                const condition: Conditional | null = conditionToken == null ? null : conditionToken.toConditional();
                 const item = Item.createLeaf(currentParent, key, values, condition);
                 currentParent.addChild(item);
             }
@@ -71,13 +71,14 @@ export function parseTokens(tokens: TokenList): Document {
 
         if(token.type === TokenType.ObjectStart) {
             if(keyToken == null) {
-                const error = new ParseError(ParseErrorType.UnexpectedOpeningBrace, new Position(token.line, token.range));
+                const error = new ParseError(ParseErrorType.UnexpectedOpeningBrace, token.getPosition());
                 errors.push(error);
                 continue;
             }
-            const key = new PositionedLiteral(new Position(keyToken.line, keyToken.range), keyToken.value);
-            const condition: Conditional | null = conditionToken == null ? null : new Conditional(conditionToken.value, new Position(conditionToken.line, conditionToken.range));
+            const key = keyToken.toLiteral();
+            const condition: Conditional | null = conditionToken == null ? null : conditionToken.toConditional();
             const item = Item.createContainer(currentParent, key, [], condition);
+            item.startPopulatingContainer(token.toLiteral());
 
             if(currentParent == null) {
                 currentParent = item;
@@ -94,9 +95,10 @@ export function parseTokens(tokens: TokenList): Document {
 
         if(token.type === TokenType.ObjectEnd) {
             if(currentParent == null) {
-                const error = new ParseError(ParseErrorType.UnexpectedClosingBrace, new Position(token.line, token.range));
+                const error = new ParseError(ParseErrorType.UnexpectedClosingBrace, token.getPosition());
                 errors.push(error);
             } else {
+                currentParent.startPopulatingContainer(token.toLiteral());
                 currentParent = currentParent.getParent();
             }
 
@@ -114,11 +116,11 @@ export function parseTokens(tokens: TokenList): Document {
         if(currentParent == null) {
             let end: number;
             if(valueTokens.length > 0) {
-                end = valueTokens[valueTokens.length - 1].range.end;
+                end = valueTokens[valueTokens.length - 1].range.getEnd();
             } else {
-                end = keyToken.range.end;
+                end = keyToken.range.getEnd();
             }
-            errors.push(new ParseError(ParseErrorType.MissingRootObject, new Position(keyToken.line, new Range(keyToken.range.start, end))));
+            errors.push(new ParseError(ParseErrorType.MissingRootObject, new Position(keyToken.line, new Range(keyToken.range.getStart(), end))));
         }
     }
 

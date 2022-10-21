@@ -1,4 +1,4 @@
-import { Item, PositionedLiteral, Range, TokenList, TokenType } from "./parser-types";
+import { Document, Item, Literal, Range, TokenList, TokenType } from "./parser-types";
 
 export interface FormattingOptions {
     braceOnNewline: boolean;
@@ -46,27 +46,32 @@ export function formatAll(tokens: TokenList, options: FormattingOptions): string
 export function formatDocument(document: Document, options: FormattingOptions): Document {
     
 }
-
+*/
 export function formatIndentation(document: Document): Document {
-
-    const indent = 0;
     document.getRootItems().forEach(root => {
-        indentItem(root, indent);
+        indentContainer(root, 0);
     });
 }
-*/
+
+function indentContainer(item: Item, indentLevel: number, indentSpaceCount = 4): Item {
+    if(item.isLeaf()) {
+        indentItem(item, indentLevel);
+    } else {
+        const newChildren = item.getChildren()!.map(child => indentContainer(child, indentLevel, indentSpaceCount));
+        item.replaceChildren(newChildren);
+    }
+}
+
 export function indentItem(item: Item, indentLevel: number): Item {
     const key = item.getKey();
+    key.getPosition().range = getIndentedLiteralRange(indentLevel, key);
     if(item.isLeaf()) {
-        key.getPosition().range = getIndentedLiteralRange(indentLevel, key);
-
         for(const valueLiteral of item.getValues()!) {
             valueLiteral.getPosition().range = getIndentedLiteralRange(indentLevel, valueLiteral);
         }
     }
-    return item;
 }
 
-function getIndentedLiteralRange(indentLevel: number, literal: PositionedLiteral): Range {
-    return new Range(literal.getPosition().range.start + indentLevel, literal.getPosition().range.end + indentLevel);
+function getIndentedLiteralRange(indentLevel: number, literal: Literal): Range {
+    return new Range(literal.getPosition().getRange().getStart() + indentLevel, literal.getPosition().getRange().getEnd() + indentLevel);
 }
