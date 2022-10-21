@@ -3,6 +3,9 @@
 packages/*/lib
 packages/*/node_modules
 
+# Test coverage output
+packages/*/coverage
+
 # dependencies
 node_modules
 
