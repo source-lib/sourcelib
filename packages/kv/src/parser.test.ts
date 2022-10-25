@@ -249,14 +249,14 @@ describe("Parse Errors", () => {
     test("Error: No Root", () => {
 
         const kvFile = 
-    `"key" "value"
+`"key" "value"
 
-    "Elem" {
-        "legalkey" "legalvalue"
-    }
+"Elem" {
+    "legalkey" "legalvalue"
+}
 
-    "key2" "value2"
-    `;
+"key2" "value2"
+`;
         const kvTree = parser.parseText(kvFile);
         expect(kvTree.getRootItems().length).toBe(1);
         expect(kvTree.getErrors().length).toBe(2);
@@ -278,12 +278,12 @@ describe("Parse Errors", () => {
     test("Error: No Values", () => {
 
         const kvFile =
-    `Tests {
-        key1
-        key2
+`Tests {
+    key1
+    key2
 
-        key3 value1
-    }`;
+    key3 value1
+}`;
 
         const kvTree = parser.parseText(kvFile);
         expect(kvTree.getRootItems().length).toBe(1);
@@ -323,11 +323,11 @@ describe("Parse Errors", () => {
 
     test("Error: Unexpected Opening Brace", () => {
         const kvFile = 
-    `Test {
-        {
+`Test {
+    {
 
 
-    }`;
+}`;
 
         const kvTree = parser.parseText(kvFile);
         expect(kvTree.getRootItems().length).toBe(1);
@@ -341,10 +341,10 @@ describe("Parse Errors", () => {
 
     test("Error: Unexpected Closing Brace", () => {
         const kvFile = 
-    `Test {
-        "key" "value"
-        }
-    }`;
+`Test {
+    "key" "value"
+    }
+}`;
 
         const kvTree = parser.parseText(kvFile);
         expect(kvTree.getRootItems().length).toBe(1);
