@@ -1,10 +1,9 @@
-import { Tokenizer } from "./tokenizer";
+import * as tokenizer from "./tokenizer";
 import { benchmarkSuite } from "jest-bench";
 
-const tokenizer = new Tokenizer();
 benchmarkSuite("kv-tokenizer", {
     ["Tokenize Small File"]: () => {
-        tokenizer.tokenizeFile(`"Keyvalues"
+        tokenizer.tokenize(`"Keyvalues"
         {
         
             // A comment
@@ -38,7 +37,7 @@ benchmarkSuite("kv-tokenizer", {
         }`);
     },
     ["Tokenize Soundmixers File"]: () => {
-        tokenizer.tokenizeFile(`// Portal: Revolution custom sound mixers.
+        tokenizer.tokenize(`// Portal: Revolution custom sound mixers.
         // These Sound Mixers are referenced by name from Soundscapes, and are used to provide
         // custom volume control over various sound categories, called 'mix groups'
         
