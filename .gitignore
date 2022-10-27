@@ -5,6 +5,7 @@ packages/*/node_modules
 
 # Test coverage output
 packages/*/coverage
+packages/*/benchmarks
 
 # dependencies
 node_modules
