@@ -81,7 +81,7 @@ export function parseTokens(tokens: TokenList): Document {
                 const error = new ParseError(ParseErrorType.UnexpectedClosingBrace, token.getPosition());
                 state.errors.push(error);
             } else {
-                state.currentParent.startPopulatingContainer(token.toLiteral());
+                state.currentParent.endPopulatingContainer(token.toLiteral());
                 state.currentParent = state.currentParent.getParent();
             }
 

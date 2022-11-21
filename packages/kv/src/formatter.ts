@@ -1,4 +1,4 @@
-import { Document, Item, Literal, Range, TokenList, TokenType } from "./parser-types";
+import { Document, Item, Literal, ParseError, Position, Range, TokenList, TokenType } from "./parser-types";
 
 export interface FormattingOptions {
     braceOnNewline: boolean;
@@ -47,31 +47,55 @@ export function formatDocument(document: Document, options: FormattingOptions): 
     
 }
 */
+
+// TODO: Implement support for tab indentation and variable space amount
+function getIndentSpacer(indentLevel: number) {
+    return indentLevel * 4;
+}
+
 export function formatIndentation(document: Document): Document {
-    document.getRootItems().forEach(root => {
-        indentContainer(root, 0);
+    
+    const roots: Item[] = document.getRootItems().map(root => indentItem(root, 0));
+
+
+    return new Document(roots, errors);
+}
+
+// TODO: Indent conditionals
+export function indentItem(item: Item, indentLevel: number = 0): Item {
+    
+    
+    const indentedKey = indentKey(item.getKey(), indentLevel);
+    
+    if(item.isLeaf()) {
+        return indentLeafValues(item, indentedKey, indentLevel);
+    }
+    
+    indentLevel++;
+    const children: Item[] = item.getChildren()!.map(childLiteral => indentItem(childLiteral, indentLevel));
+
+    return Item.createContainer(item.getParent(), indentedKey, children, item.getCondition());
+        
+}
+
+function indentLeafValues(item: Item, indentedKey: Literal, indentLevel: number): Item {
+
+    let offset = indentedKey.getPosition().getRange().getEnd();
+
+    const values: Literal[] = item.getValues()!.map((valLiteral: Literal) => {
+
+        const v = valLiteral.copy();
+        v.getPosition().getRange().moveTo(offset + 1); // TODO: Add support for different kinds of spacing between values
+        offset += v.getPosition().getRange().getLength() + 1;
+
+        return v;
     });
+
+    return Item.createLeaf(item.getParent(), indentedKey, values, item.getCondition());
 }
 
-function indentContainer(item: Item, indentLevel: number, indentSpaceCount = 4): Item {
-    if(item.isLeaf()) {
-        indentItem(item, indentLevel);
-    } else {
-        const newChildren = item.getChildren()!.map(child => indentContainer(child, indentLevel, indentSpaceCount));
-        item.replaceChildren(newChildren);
-    }
-}
-
-export function indentItem(item: Item, indentLevel: number): Item {
-    const key = item.getKey();
-    key.getPosition().range = getIndentedLiteralRange(indentLevel, key);
-    if(item.isLeaf()) {
-        for(const valueLiteral of item.getValues()!) {
-            valueLiteral.getPosition().range = getIndentedLiteralRange(indentLevel, valueLiteral);
-        }
-    }
-}
-
-function getIndentedLiteralRange(indentLevel: number, literal: Literal): Range {
-    return new Range(literal.getPosition().getRange().getStart() + indentLevel, literal.getPosition().getRange().getEnd() + indentLevel);
+function indentKey(key: Literal, indentLevel: number): Literal {
+    const k = key.copy();
+    k.getPosition().getRange().moveTo(getIndentSpacer(indentLevel));
+    return k;
 }

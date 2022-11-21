@@ -78,6 +78,21 @@ export class Range {
     private end: number;
 
     constructor(start: number, end: number) {
+        if(start < 0) {
+            throw new RangeError("Start must not be less than zero");
+        }
+        if(end < 0) {
+            throw new RangeError("End must not be less than zero");
+        }
+        if(end < start) {
+            throw new RangeError("End must not be less than start");
+        }
+        if(!Number.isInteger(start)) {
+            throw new RangeError("Start must not be a float");
+        }
+        if(!Number.isInteger(end)) {
+            throw new RangeError("End must not be a float");
+        }
         this.start = start;
         this.end = end;
     }
@@ -95,13 +110,23 @@ export class Range {
     }
 
     public moveBy(delta: number): void {
-        this.start += delta;
-        this.end += delta;
+        if(!Number.isInteger(delta)) {
+            throw new RangeError("Delta must not be a float");
+        }
+        const destStart = this.start + delta;
+        const destEnd = this.end + delta;
+
+        if(destStart < 0 || destEnd < 0) {
+            throw new RangeError("Resulting range is less than 0");
+        }
+        this.start = destStart;
+        this.end = destEnd;
     }
 
-    public moveTo(start: number, end: number): void {
+    public moveTo(start: number): void {
+        const prevLength = this.getLength();
         this.start = start;
-        this.end = end;
+        this.end = start + prevLength;
     }
 
     public moveStartTo(start: number): void {
@@ -138,6 +163,9 @@ export class Position {
     private range: Range;
 
     constructor(line: number, range: Range) {
+        if(line < 0) {
+            throw new RangeError("Line cannot be less than zero");
+        }
         this.line = line;
         this.range = range;
     }
@@ -148,6 +176,42 @@ export class Position {
 
     public getRange(): Range {
         return this.range;
+    }
+
+    public copy(): Position {
+        return new Position(this.line, this.range);
+    }
+
+    /**
+     * 
+     * @param delta Where to move the line to. Must be an unsigned int
+     * @returns Returns 'this', mutated
+     */
+    public moveToLine(line: number): Position {
+        if(!Number.isInteger(line)) {
+            throw new RangeError("Line must not be float");
+        }
+        if(line < 0) {
+            throw new RangeError("Line cannot be less than zero");
+        }
+        this.line = line;
+        return this;
+    }
+
+    /**
+     * 
+     * @param delta Amount of lines to move forward (down). Must be an int. Clamps at 0
+     * @returns Returns 'this', mutated
+     */
+    public moveLineBy(delta: number): Position {
+        if(!Number.isInteger(delta)) {
+            throw new RangeError("Delta must not be float");
+        }
+        const dest = this.line - delta;
+        if(dest < 0) {
+            throw new RangeError("The resulting line number cannot be less than zero.");
+        }
+        return this;
     }
 }
 
@@ -193,25 +257,15 @@ export class Literal {
     public isValid(): boolean {
         return this.getContent().length === this.getPosition().getRange().getLength();
     }
+
+    public copy(): Literal {
+        return new Literal(this.position, this.content);
+    }
     
 }
 
-export class Conditional {
-    private conditionalString: string;
-    private position: Position;
+export class Conditional extends Literal {
 
-    constructor(conditionalString: string, position: Position) {
-        this.conditionalString = conditionalString;
-        this.position = position;
-    }
-
-    public getPosition(): Position {
-        return this.position;
-    }
-
-    public getConditionalString(): string {
-        return this.conditionalString;
-    }
 }
 
 export class Item {
@@ -221,8 +275,8 @@ export class Item {
     private children: Item[] | null;
     private values: Literal[] | null;
     private condition: Conditional | null;
-    private openingBrace: Literal;
-    private closingBrace: Literal;
+    private openingBrace: Literal | null;
+    private closingBrace: Literal | null;
 
     private constructor(key: Literal, parent: Item | null, condition: Conditional | null) {
         this.key = key;
@@ -230,6 +284,8 @@ export class Item {
         this.values = null;
         this.parent = parent;
         this.condition = condition;
+        this.openingBrace = null;
+        this.closingBrace = null;
     }
 
     public static createLeaf(parent: Item | null, key: Literal, value: Literal[], condition: Conditional | null = null): Item {
@@ -241,6 +297,13 @@ export class Item {
     public static createContainer(parent: Item | null, key: Literal, children: Item[], condition: Conditional | null = null): Item {
         const item = new Item(key, parent, condition);
         item.children = children;
+        return item;
+    }
+
+    public copy(): Item {
+        const item = new Item(this.key, this.parent, this.condition);
+        item.values = this.values;
+        item.children = this.children;
         return item;
     }
 
@@ -295,11 +358,11 @@ export class Item {
         this.closingBrace = closingBrace;
     }
 
-    public getOpeningBrace(): Literal {
+    public getOpeningBrace(): Literal | null {
         return this.openingBrace;
     }
 
-    public getClosingBrace(): Literal {
+    public getClosingBrace(): Literal | null {
         return this.closingBrace;
     }
 }

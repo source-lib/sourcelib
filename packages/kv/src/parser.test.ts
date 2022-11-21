@@ -28,6 +28,14 @@ describe("Parse Successes", () => {
         expect(root.getKey().getPosition().getLine()).toBe(0);
         expect(root.getKey().getPosition().getRange().getStart()).toBe(0);
         expect(root.getKey().getPosition().getRange().getEnd()).toBe(4);
+        expect(root.getOpeningBrace()).not.toBeNull();
+        expect(root.getOpeningBrace()!.getPosition().getLine()).toBe(0);
+        expect(root.getOpeningBrace()!.getPosition().getRange().getStart()).toBe(5);
+        expect(root.getOpeningBrace()!.getPosition().getRange().getEnd()).toBe(6);
+        expect(root.getClosingBrace()).not.toBeNull();
+        expect(root.getClosingBrace()!.getPosition().getLine()).toBe(12);
+        expect(root.getClosingBrace()!.getPosition().getRange().getStart()).toBe(0);
+        expect(root.getClosingBrace()!.getPosition().getRange().getEnd()).toBe(1);
         expect(root.hasCondition()).toBeFalsy();
         expect(root.getCondition()).toBeNull();
         expect(root.getChildren()).not.toBeNull();
