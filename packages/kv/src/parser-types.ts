@@ -32,7 +32,7 @@ export class Token {
     }
 
     public toConditional(): Conditional {
-        return new Conditional(this.value, this.getPosition());
+        return new Conditional(this.getPosition(), this.value);
     }
 }
 

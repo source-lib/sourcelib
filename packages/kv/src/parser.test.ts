@@ -175,11 +175,11 @@ describe("Parse Successes", () => {
 
         const item1 = root.getChildren()![0];
         expect(item1.hasCondition()).toBeTruthy();
-        expect(item1.getCondition()!.getConditionalString()).toBe("[$Debug]");
+        expect(item1.getCondition()!.getContent()).toBe("[$Debug]");
 
         const container = root.getChildren()![1];
         expect(container.hasCondition()).toBeTruthy();
-        expect(container.getCondition()!.getConditionalString()).toBe("[$Debug2]");
+        expect(container.getCondition()!.getContent()).toBe("[$Debug2]");
         expect(container.getChildren()![0].hasCondition()).toBeFalsy();
         expect(container.getChildren()![0].getCondition()).toBeNull();
 
