@@ -1,0 +1,15 @@
+{
+    "embeds": [
+        {
+            "type": "rich",
+            "title": "Update available [#VERSION#] for @sourcelib/#PACKAGE#",
+            "description": "#DESCRIPTION#",
+            "color": "4238322",
+            "footer": {
+              "text": "@sourcelib/#PACKAGE#",
+              "icon_url": "https://avatars.githubusercontent.com/u/113333678"
+            },
+            "url": "https://www.npmjs.com/package/@sourcelib/#PACKAGE#/v/#VERSION#"
+        }
+    ]
+  }

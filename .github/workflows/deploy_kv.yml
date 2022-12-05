@@ -1,0 +1,13 @@
+name: Deploy package "KV" to NPM
+
+on:
+  push:
+    tags:
+      - 'kv-[0-9].[0-9].[0-9]'
+
+jobs:
+  deploy_kv:
+    uses: ./.github/workflows/_deploy.yml
+    with:
+      package-name: kv
+    secrets: inherit
