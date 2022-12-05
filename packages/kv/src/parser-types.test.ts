@@ -3,27 +3,27 @@ import { Item, Literal, Position, Range } from "./parser-types";
 describe("Range", () => {
     test("Construct valid Success", () => {
         expect(() => {
-            const r1 = new Range(1, 2);
+            new Range(1, 2);
         }).not.toThrow();
     });
     test("Construct less than zero start Fail", () => {
         expect(() => {
-            const r1 = new Range(-1, 2);
+            new Range(-1, 2);
         }).toThrowError();
     });
     test("Construct end less than start Fail", () => {
         expect(() => {
-            const r1 = new Range(3, 2);
+            new Range(3, 2);
         }).toThrowError();
     });
     test("Construct float start Fail", () => {
         expect(() => {
-            const r1 = new Range(3.3, 2);
+            new Range(3.3, 2);
         }).toThrowError();
     });
     test("Construct float end Fail", () => {
         expect(() => {
-            const r1 = new Range(1, 2.4);
+            new Range(1, 2.4);
         }).toThrowError();
     });
 

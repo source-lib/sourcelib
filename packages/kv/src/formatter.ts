@@ -1,10 +1,10 @@
-import { Document, Item, Literal, ParseError, Position, Range, TokenList, TokenType } from "./parser-types";
+import { Document, Item, Literal } from "./parser-types";
 
 export interface FormattingOptions {
     braceOnNewline: boolean;
     alwaysQuote: boolean;
 }
-
+/*
 export function formatAll(tokens: TokenList, options: FormattingOptions): string {
     let indentation = 0;
     let text = "";
@@ -41,7 +41,7 @@ export function formatAll(tokens: TokenList, options: FormattingOptions): string
     }
 
     return text;
-}
+}*/
 /*
 export function formatDocument(document: Document, options: FormattingOptions): Document {
     
@@ -62,7 +62,7 @@ export function formatIndentation(document: Document): Document {
 }
 
 // TODO: Indent conditionals
-export function indentItem(item: Item, indentLevel: number = 0): Item {
+export function indentItem(item: Item, indentLevel = 0): Item {
     
     
     const indentedKey = indentKey(item.getKey(), indentLevel);
@@ -80,6 +80,7 @@ export function indentItem(item: Item, indentLevel: number = 0): Item {
 
 function indentLeafValues(item: Item, indentedKey: Literal, indentLevel: number): Item {
 
+    indentLevel;
     let offset = indentedKey.getPosition().getRange().getEnd();
 
     const values: Literal[] = item.getValues()!.map((valLiteral: Literal) => {
