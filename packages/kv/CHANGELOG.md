@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.3.0]
+
+- Re-wrote keyvalue parser and improved tokenizer
+
 ## [0.2.0]
 
 - Fixes related to project setup
