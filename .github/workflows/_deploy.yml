@@ -13,12 +13,13 @@ on:
 jobs:
   deploy_kv:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/${{ inputs.package-name }}
 
     steps:
     - uses: actions/checkout@v2
 
-    - run: cd ./packages/${{ inputs.package-name }}
-  
     - name: Install
       run: npm ci
       
@@ -26,7 +27,7 @@ jobs:
       run: npm run lint
      
     - name: Test
-      run: npm run test
+      run: npm ci
      
     - name: Publish
       run: npm publish
