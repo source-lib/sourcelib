@@ -46,14 +46,14 @@ jobs:
         content="${content//'%'/'%25'}"
         content="${content//$'\n'/'%0A'}"
         content="${content//$'\r'/'%0D'}"
-        echo "::set-output name=packageJson::$content"
+        echo "PACKAGE_JSON=$content" >> $GITHUB_ENV
+        echo "VERSION=${{ fromJson(env.content) }}" >> $GITHUB_ENV
+        echo "ESCAPED_VERISON=$(printf '%s\n' "$VERSION" | sed -e 's/[]\/$*.^[]/\\&/g')" >> $GITHUB_ENV
       
     - name: Get Changelog
       id: changelog
       run: |
-        version=${{fromJson(steps.package-json.outputs.packageJson).version}}
-        escaped_version=$(printf '%s\n' "$version" | sed -e 's/[]\/$*.^[]/\\&/g')
-        changelog=`sed -n "/^## \[$escaped_version]/,/^## /p" CHANGELOG.md | sed '$ d' | sed '1,1d'`
+        changelog=`sed -n "/^## \[$ESCAPED_VERSION]/,/^## /p" CHANGELOG.md | sed '$ d' | sed '1,1d'`
         changelog1="${changelog//'%'/'%25'}"
         changelog1="${changelog1//$'\n'/'%0A'}"
         changelog1="${changelog1//$'\r'/'%0D'}"
@@ -64,22 +64,23 @@ jobs:
         changelog2="${changelog2//$'`'/'\`'}"
         changelog2="${changelog2//$'"'/'\"'}"
         changelog2="${changelog2//"'"/"'\''"}"
-        echo "::set-output name=escaped::$changelog"
-        echo "::set-output name=unescaped::$changelog1"
-        echo "::set-output name=doubleescaped::$changelog2"
+        echo "escaped=$changelog" >> $GITHUB_OUTPUT
+        echo "unescaped=$changelog1" >> $GITHUB_OUTPUT
+        echo "doubleescaped=$changelog2" >> $GITHUB_OUTPUT
 
     - name: Github Release
       id: release
       uses: softprops/action-gh-release@v1
       with:
         body: "${{steps.changelog.outputs.unescaped}}"
-        tag_name: "${{fromJson(steps.package-json.outputs.packageJson).version}}"
+        tag_name: "$VERSION"
 
     - name: Prepare Discord Message
       id: discord-msg
+      working-directory: ./
       run: |
         awk '{
-          gsub("#VERSION#","${{fromJson(steps.package-json.outputs.packageJson).version}}",$0);
+          gsub("#VERSION#","$VERSION",$0);
           gsub("#PACKAGE#","${{inputs.package-name}}",$0);
           gsub("#DESCRIPTION#","${{steps.changelog.outputs.doubleescaped}}",$0);
           print $0;
@@ -87,6 +88,12 @@ jobs:
 
     - name: Send Discord Message
       uses: tsickert/discord-webhook@v4.0.0
+      working-directory: ./
       with:
         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
         raw-data: "./.github/workflows/deploy_discord_message2.json"
+    
+    - name: Summary
+      run: |
+        echo "# Summary"
+        echo "Version ${{}}"
