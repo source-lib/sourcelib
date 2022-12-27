@@ -11,7 +11,7 @@ on:
         required: true
 
 jobs:
-  deploy_kv:
+  deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -35,7 +35,7 @@ jobs:
       run: npm run test
      
     - name: Publish
-      run: npm publish
+      run: npm publish --access=public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         
