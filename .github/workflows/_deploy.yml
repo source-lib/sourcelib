@@ -20,10 +20,33 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - run: |
+        echo "# Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "Date: $(date)  " >> $GITHUB_STEP_SUMMARY
+        echo "Run ID: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+        echo "Run Number: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+        echo "Run Attempt: ${{ github.run_attempt }}" >> $GITHUB_STEP_SUMMARY
+
     - uses: actions/setup-node@v3
       with:
         node-version: '16.x'
         registry-url: 'https://registry.npmjs.org'
+      run: |
+        echo "Node Version: $(node --version)" - NPM Version: $(npm --version) >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "Package Name: **${{ inputs.package-name }}**  " >> $GITHUB_STEP_SUMMARY
+
+    - name: Read package.json
+      id: package-json
+      run: |
+        content=`cat ./package.json`
+        content="${content//'%'/'%25'}"
+        content="${content//$'\n'/'%0A'}"
+        content="${content//$'\r'/'%0D'}"
+        echo "PACKAGE_JSON=$content" >> $GITHUB_ENV
+        echo "VERSION=${{ fromJson(env.content) }}" >> $GITHUB_ENV
+        echo "ESCAPED_VERISON=$(printf '%s\n' "$VERSION" | sed -e 's/[]\/$*.^[]/\\&/g')" >> $GITHUB_ENV
+        echo "Package Version: **$VERSION**  " >> $GITHUB_STEP_SUMMARY
 
     - name: Install
       run: npm ci
@@ -38,18 +61,12 @@ jobs:
       run: npm publish --access=public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    
+    - run: |
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Successfully published to the [NPM registry](https://www.npmjs.com/package/@sourcelib/${{inputs.package-name}}/v/$VERSION)" >> $GITHUB_STEP_SUMMARY
         
-    - name: Read package.json
-      id: package-json
-      run: |
-        content=`cat ./package.json`
-        content="${content//'%'/'%25'}"
-        content="${content//$'\n'/'%0A'}"
-        content="${content//$'\r'/'%0D'}"
-        echo "PACKAGE_JSON=$content" >> $GITHUB_ENV
-        echo "VERSION=${{ fromJson(env.content) }}" >> $GITHUB_ENV
-        echo "ESCAPED_VERISON=$(printf '%s\n' "$VERSION" | sed -e 's/[]\/$*.^[]/\\&/g')" >> $GITHUB_ENV
-      
+
     - name: Get Changelog
       id: changelog
       run: |
@@ -67,6 +84,8 @@ jobs:
         echo "escaped=$changelog" >> $GITHUB_OUTPUT
         echo "unescaped=$changelog1" >> $GITHUB_OUTPUT
         echo "doubleescaped=$changelog2" >> $GITHUB_OUTPUT
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "${{steps.changelog.outputs.doubleescaped}}" >> $GITHUB_STEP_SUMMARY
 
     - name: Github Release
       id: release
@@ -92,8 +111,6 @@ jobs:
       with:
         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
         raw-data: "./.github/workflows/deploy_discord_message2.json"
-    
-    - name: Summary
-      run: |
-        echo "# Summary"
-        echo "Version ${{}}"
+
+    - run: |
+        echo "Discord Message sent successfully" >> $GITHUB_STEP_SUMMARY
