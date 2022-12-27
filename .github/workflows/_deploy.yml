@@ -108,7 +108,7 @@ jobs:
 
     - name: Send Discord Message
       uses: tsickert/discord-webhook@v4.0.0
-      working-directory: ./
+      # working-directory: ./
       with:
         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
         raw-data: "./.github/workflows/deploy_discord_message2.json"
