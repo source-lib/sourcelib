@@ -45,9 +45,12 @@ jobs:
         content="${content//$'\n'/'%0A'}"
         content="${content//$'\r'/'%0D'}"
         echo "PACKAGE_JSON=$content" >> $GITHUB_ENV
-        echo "VERSION=${{ fromJson(env.PACKAGE_JSON) }}" >> $GITHUB_ENV
-        echo "ESCAPED_VERISON=$(printf '%s\n' "$VERSION" | sed -e 's/[]\/$*.^[]/\\&/g')" >> $GITHUB_ENV
-        echo "Package Version: **$VERSION**  " >> $GITHUB_STEP_SUMMARY
+      
+    - run: |
+        version=${{ fromJson(env.PACKAGE_JSON) }}
+        echo "VERSION=$version" >> $GITHUB_ENV
+        echo "ESCAPED_VERISON=$(printf '%s\n' "$version" | sed -e 's/[]\/$*.^[]/\\&/g')" >> $GITHUB_ENV
+        echo "Package Version: **$version**  " >> $GITHUB_STEP_SUMMARY
 
     - name: Install
       run: npm ci
