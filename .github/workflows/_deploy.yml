@@ -23,9 +23,9 @@ jobs:
     - run: |
         echo "# Deployment Summary" >> $GITHUB_STEP_SUMMARY
         echo "Date: $(date)  " >> $GITHUB_STEP_SUMMARY
-        echo "Run ID: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
-        echo "Run Number: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
-        echo "Run Attempt: ${{ github.run_attempt }}" >> $GITHUB_STEP_SUMMARY
+        echo "Run ID: ${{ github.run_id }}  " >> $GITHUB_STEP_SUMMARY
+        echo "Run Number: ${{ github.run_number }}  " >> $GITHUB_STEP_SUMMARY
+        echo "Run Attempt: ${{ github.run_attempt }}  " >> $GITHUB_STEP_SUMMARY
 
     - uses: actions/setup-node@v3
       with:
@@ -33,7 +33,7 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
       
     - run: |
-        echo "Node Version: $(node --version)" - NPM Version: $(npm --version) >> $GITHUB_STEP_SUMMARY
+        echo "Node Version: $(node --version) - NPM Version: $(npm --version)  " >> $GITHUB_STEP_SUMMARY
         echo "---" >> $GITHUB_STEP_SUMMARY
         echo "Package Name: **${{ inputs.package-name }}**  " >> $GITHUB_STEP_SUMMARY
 
@@ -88,7 +88,7 @@ jobs:
         echo "unescaped=$changelog1" >> $GITHUB_OUTPUT
         echo "doubleescaped=$changelog2" >> $GITHUB_OUTPUT
         echo "---" >> $GITHUB_STEP_SUMMARY
-        echo "${{steps.changelog.outputs.doubleescaped}}" >> $GITHUB_STEP_SUMMARY
+        echo $escaped >> $GITHUB_STEP_SUMMARY
 
     - name: Github Release
       id: release
