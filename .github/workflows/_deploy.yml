@@ -47,7 +47,7 @@ jobs:
         echo "PACKAGE_JSON=$content" >> $GITHUB_ENV
       
     - run: |
-        version=${{ fromJson(env.PACKAGE_JSON) }}
+        version=${{ fromJson(env.PACKAGE_JSON).version }}
         echo "VERSION=$version" >> $GITHUB_ENV
         echo "ESCAPED_VERISON=$(printf '%s\n' "$version" | sed -e 's/[]\/$*.^[]/\\&/g')" >> $GITHUB_ENV
         echo "Package Version: **$version**  " >> $GITHUB_STEP_SUMMARY
