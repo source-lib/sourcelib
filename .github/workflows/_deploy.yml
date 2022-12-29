@@ -95,7 +95,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         body: "${{steps.changelog.outputs.unescaped}}"
-        tag_name: "$VERSION"
+        tag_name: "${{inputs.package-name}}-${{env.VERSION}}"
 
     - name: Prepare Discord Message
       id: discord-msg
