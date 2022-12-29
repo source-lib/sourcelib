@@ -42,7 +42,7 @@ jobs:
       run: |
         echo "PACKAGE_JSON<<GH-EOF" >> $GITHUB_ENV
         cat ./package.json >> $GITHUB_ENV
-        echo "GH-EOF" >> $GITHUB_OUTPUT
+        echo "GH-EOF" >> $GITHUB_ENV
       
     - run: |
         version=${{ fromJson(env.PACKAGE_JSON).version }}
