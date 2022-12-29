@@ -18,24 +18,24 @@ jobs:
         working-directory: ./packages/${{ inputs.package-name }}
 
     steps:
-    - uses: actions/checkout@v2
-
-    - run: |
-        echo "# Deployment Summary" >> $GITHUB_STEP_SUMMARY
-        echo "Date: $(date)  " >> $GITHUB_STEP_SUMMARY
-        echo "Run ID: ${{ github.run_id }}  " >> $GITHUB_STEP_SUMMARY
-        echo "Run Number: ${{ github.run_number }}  " >> $GITHUB_STEP_SUMMARY
-        echo "Run Attempt: ${{ github.run_attempt }}  " >> $GITHUB_STEP_SUMMARY
+    - uses: actions/checkout@v3
 
     - uses: actions/setup-node@v3
       with:
         node-version: '16.x'
         registry-url: 'https://registry.npmjs.org'
-      
-    - run: |
+
+    - name: Summary Head
+      run: |
+        echo "# Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "Date: $(date)  " >> $GITHUB_STEP_SUMMARY
+        echo "Run ID: ${{ github.run_id }}  " >> $GITHUB_STEP_SUMMARY
+        echo "Run Number: ${{ github.run_number }}  " >> $GITHUB_STEP_SUMMARY
+        echo "Run Attempt: ${{ github.run_attempt }}  " >> $GITHUB_STEP_SUMMARY
         echo "Node Version: $(node --version) - NPM Version: $(npm --version)  " >> $GITHUB_STEP_SUMMARY
         echo "---" >> $GITHUB_STEP_SUMMARY
         echo "Package Name: **${{ inputs.package-name }}**  " >> $GITHUB_STEP_SUMMARY
+
 
     - name: Read package.json
       id: package-json
@@ -43,8 +43,8 @@ jobs:
         echo "PACKAGE_JSON<<GH-EOF" >> $GITHUB_ENV
         cat ./package.json >> $GITHUB_ENV
         echo "GH-EOF" >> $GITHUB_ENV
-      
-    - run: |
+    - name: "Read package version"
+      run: |
         version=${{ fromJson(env.PACKAGE_JSON).version }}
         escaped_version=$(printf '%s\n' "$version" | sed -e 's/[]\/$*.^[]/\\&/g')
         echo "VERSION=$version" >> $GITHUB_ENV
@@ -61,14 +61,12 @@ jobs:
       run: npm run test
      
     - name: Publish
-      run: npm publish --access=public
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    
-    - run: |
+      run: |
+        npm publish --access=public
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "Successfully published to the [NPM registry](https://www.npmjs.com/package/@sourcelib/${{inputs.package-name}}/v/$VERSION)" >> $GITHUB_STEP_SUMMARY
-        
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}      
 
     - name: Get Changelog
       id: changelog
@@ -84,17 +82,15 @@ jobs:
         changelog2="${changelog2//$'`'/'\`'}"
         changelog2="${changelog2//$'"'/'\"'}"
         changelog2="${changelog2//"'"/"'\''"}"
-        echo "escaped=$changelog" >> $GITHUB_OUTPUT
-        echo "unescaped=$changelog1" >> $GITHUB_OUTPUT
-        echo "doubleescaped=$changelog2" >> $GITHUB_OUTPUT
-        echo "---" >> $GITHUB_STEP_SUMMARY
-        echo $escaped >> $GITHUB_STEP_SUMMARY
+        echo "CL_ESCAPED=$changelog" >> $GITHUB_ENV
+        echo "CL_UNESCAPED=$changelog1" >> $GITHUB_ENV
+        echo "CL_DOUBLEESCAPED=$changelog2" >> $GITHUB_ENV
 
     - name: Github Release
       id: release
       uses: softprops/action-gh-release@v1
       with:
-        body: "${{steps.changelog.outputs.unescaped}}"
+        body: "${{env.CL_UNESCAPED}}"
         tag_name: "${{inputs.package-name}}-${{env.VERSION}}"
 
     - name: Prepare Discord Message
@@ -102,9 +98,9 @@ jobs:
       working-directory: ./
       run: |
         awk '{
-          gsub("#VERSION#","$VERSION",$0);
+          gsub("#VERSION#","${{env.VERSION}}",$0);
           gsub("#PACKAGE#","${{inputs.package-name}}",$0);
-          gsub("#DESCRIPTION#","${{steps.changelog.outputs.doubleescaped}}",$0);
+          gsub("#DESCRIPTION#","${{env.CL_DOUBLEESCAPED}}",$0);
           print $0;
         }' ./.github/workflows/deploy_discord_message.json > ./.github/workflows/deploy_discord_message2.json
 
@@ -115,5 +111,6 @@ jobs:
         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
         raw-data: "./.github/workflows/deploy_discord_message2.json"
 
-    - run: |
+    - name: Summary Footer
+      run: |
         echo "Discord Message sent successfully" >> $GITHUB_STEP_SUMMARY
