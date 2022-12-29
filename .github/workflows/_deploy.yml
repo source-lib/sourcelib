@@ -40,16 +40,15 @@ jobs:
     - name: Read package.json
       id: package-json
       run: |
-        content=`cat ./package.json`
-        content="${content//'%'/'%25'}"
-        content="${content//$'\n'/'%0A'}"
-        content="${content//$'\r'/'%0D'}"
-        echo "PACKAGE_JSON=$content" >> $GITHUB_ENV
+        echo "PACKAGE_JSON<<GH-EOF" >> $GITHUB_ENV
+        cat ./package.json >> $GITHUB_ENV
+        echo "GH-EOF" >> $GITHUB_OUTPUT
       
     - run: |
         version=${{ fromJson(env.PACKAGE_JSON).version }}
+        escaped_version=$(printf '%s\n' "$version" | sed -e 's/[]\/$*.^[]/\\&/g')
         echo "VERSION=$version" >> $GITHUB_ENV
-        echo "ESCAPED_VERISON=$(printf '%s\n' "$version" | sed -e 's/[]\/$*.^[]/\\&/g')" >> $GITHUB_ENV
+        echo "ESCAPED_VERISON=$escaped_version" >> $GITHUB_ENV
         echo "Package Version: **$version**  " >> $GITHUB_STEP_SUMMARY
 
     - name: Install
