@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.5.1]
+
+- Fixed a syntax error
+
 ## [0.5.0]
 
 - Fixed javascript missing from package
