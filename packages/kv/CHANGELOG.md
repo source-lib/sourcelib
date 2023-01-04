@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.4.0]
+
+- Fix build output not being contained in the package
+
 ## [0.3.3]
 
 - This is a test release
