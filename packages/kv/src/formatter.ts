@@ -58,7 +58,7 @@ export function formatIndentation(document: Document): Document {
     const roots: Item[] = document.getRootItems().map(root => indentItem(root, 0));
 
 
-    return new Document(roots, errors);
+    return new Document(roots, []);
 }
 
 // TODO: Indent conditionals
