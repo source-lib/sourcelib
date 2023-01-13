@@ -1,3 +1,6 @@
 {
-    "jest.jestCommandLine": "npm run test --"
+    "jest.jestCommandLine": "npm run test --",
+    "files.exclude": {
+        "lib/*": true
+    }
 }
