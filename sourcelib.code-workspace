@@ -20,5 +20,10 @@
             "name": "VMT",
             "path": "packages/vmt"
         }
-    ]
+    ],
+    "settings": {
+        "jest.disabledWorkspaceFolders": [
+            "root"
+        ]
+    }
 }
