@@ -77,7 +77,7 @@ export class Range {
     private start: number;
     private end: number;
 
-    constructor(start: number, end: number = start) {
+    constructor(start: number, end: number) {
         if(start < 0) {
             throw new RangeError("Start must not be less than zero");
         }
@@ -107,10 +107,6 @@ export class Range {
 
     public getEnd(): number {
         return this.end;
-    }
-
-    public hasNoLength(): boolean {
-        return this.getLength() == 0;
     }
 
     public moveBy(delta: number): void {

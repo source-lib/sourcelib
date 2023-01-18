@@ -35,32 +35,31 @@ function tokenizeInternal(text: string): TokenList {
             continue;
         }
 
-        // FIXME: Possible array out of bounds error here
         // Is it a comment?
         if(c === "/" && text[i + 1] === "/") {
             const commentLength = consumeComment(text, i + 2);
             tokenList.push(new Token(TokenType.Comment, 
                 new Range(lineColumn, lineColumn + commentLength), 
-                text.substring(i, i + commentLength + 1),
+                text.substring(i, i + commentLength), 
                 line));
-            i += commentLength;
-            lineColumn += commentLength;
+            i += commentLength - 1;
+            lineColumn += commentLength - 1;
             continue;
         }
 
         // Is it an object?
         if(c === "{") {
             tokenList.push(new Token(TokenType.ObjectStart, 
-                new Range(lineColumn), 
-                text[i],
+                new Range(lineColumn, lineColumn + 1), 
+                text[i], 
                 line));
             expectingKey = true;
             continue;
         }
         if(c === "}") {
             tokenList.push(new Token(TokenType.ObjectEnd, 
-                new Range(lineColumn), 
-                text[i],
+                new Range(lineColumn, lineColumn + 1), 
+                text[i], 
                 line));
             continue;
         }
@@ -70,16 +69,15 @@ function tokenizeInternal(text: string): TokenList {
             const conditionalLength = consumeConditional(text, i);
             tokenList.push(new Token(TokenType.Conditional, 
                 new Range(lineColumn, lineColumn + conditionalLength), 
-                text.substring(i, i + conditionalLength),
+                text.substring(i, i + conditionalLength), 
                 line));
-            i += conditionalLength;
-            expectingKey = true;
+            i += conditionalLength - 1;
             continue;
         }
 
         // No, it's a string!
         const stringLength = consumeString(text, i);
-        const stringContent = text.substring(i, i + stringLength + 1);
+        const stringContent = text.substring(i, i + stringLength);
         let tokenType = expectingKey ? TokenType.Key : TokenType.Value;
 
         // Are we a preprocessor key?
@@ -90,11 +88,11 @@ function tokenizeInternal(text: string): TokenList {
 
         tokenList.push(new Token(tokenType, 
             new Range(lineColumn, lineColumn + stringLength), 
-            stringContent,
+            stringContent, 
             line));
         if(expectingKey) expectingKey = false;
-        i += stringLength; // Prevents skipping the next character after the string
-        lineColumn += stringLength;
+        i += stringLength - 1; // Prevents skipping the next character after the string
+        lineColumn += stringLength - 1;
         continue;
     }
 
@@ -110,7 +108,7 @@ export function consumeComment(text: string, i: number): number {
         }
     }
 
-    return n;
+    return n + 1;
 }
 
 export function consumeConditional(text: string, i: number): number {
@@ -143,7 +141,7 @@ export function consumeStringQuoted(text: string, i: number, startingQuote: stri
     let c = text[i];
     for(; c != null; c = text[i + n++]) {
         if(c === "\n") {
-            return n - 1;
+            return n;
         }
         if(c === "\\") {
             escaped = !escaped;
@@ -162,12 +160,12 @@ export function consumeStringQuoted(text: string, i: number, startingQuote: stri
         }
     }
 
-    return n;
+    return n + 1;
 }
 
 export function consumeStringUnquoted(text: string, i: number): number {
     let n = 0;
     for(; i + n < text.length && !isWhitespace(text[i + n]); n++);
-    return n;
+    return n + 1;
 }
 

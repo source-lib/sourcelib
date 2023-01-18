@@ -40,7 +40,7 @@ Test2 {
     const originalRoot = kvTree.getRootItems()[0];
     const root = formatter.indentItem(originalRoot, 0);
     expect(root.getKey().getPosition().getRange().getStart()).toBe(0);
-    expect(root.getKey().getPosition().getRange().getEnd()).toBe(3);
+    expect(root.getKey().getPosition().getRange().getEnd()).toBe(4);
 
     const item1 = root.getChildren()![0];
     expect(item1.getKey().getPosition().getRange().getStart()).toBe(4);

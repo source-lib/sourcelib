@@ -27,15 +27,15 @@ describe("Parse Successes", () => {
         expect(root.getKey().getContent()).toBe("Test");
         expect(root.getKey().getPosition().getLine()).toBe(0);
         expect(root.getKey().getPosition().getRange().getStart()).toBe(0);
-        expect(root.getKey().getPosition().getRange().getEnd()).toBe(3);
+        expect(root.getKey().getPosition().getRange().getEnd()).toBe(4);
         expect(root.getOpeningBrace()).not.toBeNull();
         expect(root.getOpeningBrace()!.getPosition().getLine()).toBe(0);
         expect(root.getOpeningBrace()!.getPosition().getRange().getStart()).toBe(5);
-        expect(root.getOpeningBrace()!.getPosition().getRange().getEnd()).toBe(5);
+        expect(root.getOpeningBrace()!.getPosition().getRange().getEnd()).toBe(6);
         expect(root.getClosingBrace()).not.toBeNull();
         expect(root.getClosingBrace()!.getPosition().getLine()).toBe(12);
         expect(root.getClosingBrace()!.getPosition().getRange().getStart()).toBe(0);
-        expect(root.getClosingBrace()!.getPosition().getRange().getEnd()).toBe(0);
+        expect(root.getClosingBrace()!.getPosition().getRange().getEnd()).toBe(1);
         expect(root.hasCondition()).toBeFalsy();
         expect(root.getCondition()).toBeNull();
         expect(root.getChildren()).not.toBeNull();
@@ -48,7 +48,7 @@ describe("Parse Successes", () => {
         expect(item1.getKey().getContent()).toBe("\"item1\"");
         expect(item1.getKey().getPosition().getLine()).toBe(1);
         expect(item1.getKey().getPosition().getRange().getStart()).toBe(4);
-        expect(item1.getKey().getPosition().getRange().getEnd()).toBe(10);
+        expect(item1.getKey().getPosition().getRange().getEnd()).toBe(11);
         expect(item1.hasCondition()).toBeFalsy();
         expect(item1.getCondition()).toBeNull();
         expect(item1.getValues()).not.toBeNull();
@@ -56,7 +56,7 @@ describe("Parse Successes", () => {
         expect(item1.getValues()![0].getContent()).toBe("\"value1\"");
         expect(item1.getValues()![0].getPosition().getLine()).toBe(1);
         expect(item1.getValues()![0].getPosition().getRange().getStart()).toBe(12);
-        expect(item1.getValues()![0].getPosition().getRange().getEnd()).toBe(19);
+        expect(item1.getValues()![0].getPosition().getRange().getEnd()).toBe(20);
 
         const item2 = root.getChildren()![1];
         expect(item2.isRoot()).toBeFalsy();
@@ -65,7 +65,7 @@ describe("Parse Successes", () => {
         expect(item2.getKey().getContent()).toBe("\"item2\"");
         expect(item2.getKey().getPosition().getLine()).toBe(2);
         expect(item2.getKey().getPosition().getRange().getStart()).toBe(4);
-        expect(item2.getKey().getPosition().getRange().getEnd()).toBe(10);
+        expect(item2.getKey().getPosition().getRange().getEnd()).toBe(11);
         expect(item2.hasCondition()).toBeFalsy();
         expect(item2.getCondition()).toBeNull();
         expect(item2.getValues()).not.toBeNull();
@@ -73,7 +73,7 @@ describe("Parse Successes", () => {
         expect(item2.getValues()![0].getContent()).toBe("\"value2\"");
         expect(item2.getValues()![0].getPosition().getLine()).toBe(2);
         expect(item2.getValues()![0].getPosition().getRange().getStart()).toBe(12);
-        expect(item2.getValues()![0].getPosition().getRange().getEnd()).toBe(19);
+        expect(item2.getValues()![0].getPosition().getRange().getEnd()).toBe(20);
 
         const item3 = root.getChildren()![2];
         expect(item3.isRoot()).toBeFalsy();
@@ -82,7 +82,7 @@ describe("Parse Successes", () => {
         expect(item3.getKey().getContent()).toBe("\"item3\"");
         expect(item3.getKey().getPosition().getLine()).toBe(4);
         expect(item3.getKey().getPosition().getRange().getStart()).toBe(4);
-        expect(item3.getKey().getPosition().getRange().getEnd()).toBe(10);
+        expect(item3.getKey().getPosition().getRange().getEnd()).toBe(11);
         expect(item3.hasCondition()).toBeFalsy();
         expect(item3.getCondition()).toBeNull();
         expect(item3.getValues()).toBeNull();
@@ -96,7 +96,7 @@ describe("Parse Successes", () => {
         expect(item4.getKey().getContent()).toBe("\"item4\"");
         expect(item4.getKey().getPosition().getLine()).toBe(5);
         expect(item4.getKey().getPosition().getRange().getStart()).toBe(8);
-        expect(item4.getKey().getPosition().getRange().getEnd()).toBe(14);
+        expect(item4.getKey().getPosition().getRange().getEnd()).toBe(15);
         expect(item4.hasCondition()).toBeFalsy();
         expect(item4.getCondition()).toBeNull();
         expect(item4.getValues()).not.toBeNull();
@@ -104,7 +104,7 @@ describe("Parse Successes", () => {
         expect(item4.getValues()![0].getContent()).toBe("\"value4\"");
         expect(item4.getValues()![0].getPosition().getLine()).toBe(5);
         expect(item4.getValues()![0].getPosition().getRange().getStart()).toBe(16);
-        expect(item4.getValues()![0].getPosition().getRange().getEnd()).toBe(23);
+        expect(item4.getValues()![0].getPosition().getRange().getEnd()).toBe(24);
 
         const item5 = root.getChildren()![3];
         expect(item5.isRoot()).toBeFalsy();
@@ -113,7 +113,7 @@ describe("Parse Successes", () => {
         expect(item5.getKey().getContent()).toBe("\"item5\"");
         expect(item5.getKey().getPosition().getLine()).toBe(8);
         expect(item5.getKey().getPosition().getRange().getStart()).toBe(4);
-        expect(item5.getKey().getPosition().getRange().getEnd()).toBe(10);
+        expect(item5.getKey().getPosition().getRange().getEnd()).toBe(11);
         expect(item5.hasCondition()).toBeFalsy();
         expect(item5.getCondition()).toBeNull();
         expect(item5.getValues()).toBeNull();
@@ -127,7 +127,7 @@ describe("Parse Successes", () => {
         expect(item6.getKey().getContent()).toBe("\"item6\"");
         expect(item6.getKey().getPosition().getLine()).toBe(9);
         expect(item6.getKey().getPosition().getRange().getStart()).toBe(8);
-        expect(item6.getKey().getPosition().getRange().getEnd()).toBe(14);
+        expect(item6.getKey().getPosition().getRange().getEnd()).toBe(15);
         expect(item6.hasCondition()).toBeFalsy();
         expect(item6.getCondition()).toBeNull();
         expect(item6.getValues()).not.toBeNull();
@@ -135,7 +135,7 @@ describe("Parse Successes", () => {
         expect(item6.getValues()![0].getContent()).toBe("\"value6\"");
         expect(item6.getValues()![0].getPosition().getLine()).toBe(9);
         expect(item6.getValues()![0].getPosition().getRange().getStart()).toBe(16);
-        expect(item6.getValues()![0].getPosition().getRange().getEnd()).toBe(23);
+        expect(item6.getValues()![0].getPosition().getRange().getEnd()).toBe(24);
 
         const item7 = item5.getChildren()![1];
         expect(item7.isRoot()).toBeFalsy();
@@ -144,7 +144,7 @@ describe("Parse Successes", () => {
         expect(item7.getKey().getContent()).toBe("\"item7\"");
         expect(item7.getKey().getPosition().getLine()).toBe(10);
         expect(item7.getKey().getPosition().getRange().getStart()).toBe(8);
-        expect(item7.getKey().getPosition().getRange().getEnd()).toBe(14);
+        expect(item7.getKey().getPosition().getRange().getEnd()).toBe(15);
         expect(item7.hasCondition()).toBeFalsy();
         expect(item7.getCondition()).toBeNull();
         expect(item7.getValues()).not.toBeNull();
@@ -152,7 +152,7 @@ describe("Parse Successes", () => {
         expect(item7.getValues()![0].getContent()).toBe("\"value7\"");
         expect(item7.getValues()![0].getPosition().getLine()).toBe(10);
         expect(item7.getValues()![0].getPosition().getRange().getStart()).toBe(16);
-        expect(item7.getValues()![0].getPosition().getRange().getEnd()).toBe(23);
+        expect(item7.getValues()![0].getPosition().getRange().getEnd()).toBe(24);
         
     });
 
@@ -273,13 +273,13 @@ describe("Parse Errors", () => {
         expect(err1.type).toBe(ParseErrorType.MissingRootObject);
         expect(err1.position.getLine()).toBe(0);
         expect(err1.position.getRange().getStart()).toBe(0);
-        expect(err1.position.getRange().getEnd()).toBe(12);
+        expect(err1.position.getRange().getEnd()).toBe(13);
 
         const err2 = kvTree.getErrors()[1];
         expect(err2.type).toBe(ParseErrorType.MissingRootObject);
         expect(err2.position.getLine()).toBe(6);
         expect(err2.position.getRange().getStart()).toBe(0);
-        expect(err2.position.getRange().getEnd()).toBe(14);
+        expect(err2.position.getRange().getEnd()).toBe(15);
 
     });
 
@@ -321,11 +321,11 @@ describe("Parse Errors", () => {
         expect(errors[0].type).toBe(ParseErrorType.MissingValue);
         expect(errors[0].position.getLine()).toBe(1);
         expect(errors[0].position.getRange().getStart()).toBe(4);
-        expect(errors[0].position.getRange().getEnd()).toBe(7);
+        expect(errors[0].position.getRange().getEnd()).toBe(8);
         expect(errors[1].type).toBe(ParseErrorType.MissingValue);
         expect(errors[1].position.getLine()).toBe(2);
         expect(errors[1].position.getRange().getStart()).toBe(4);
-        expect(errors[1].position.getRange().getEnd()).toBe(7);
+        expect(errors[1].position.getRange().getEnd()).toBe(8);
 
     });
 
@@ -344,7 +344,7 @@ describe("Parse Errors", () => {
         expect(err.type).toBe(ParseErrorType.UnexpectedOpeningBrace);
         expect(err.position.getLine()).toBe(1);
         expect(err.position.getRange().getStart()).toBe(4);
-        expect(err.position.getRange().getEnd()).toBe(4);
+        expect(err.position.getRange().getEnd()).toBe(5);
     });
 
     test("Error: Unexpected Closing Brace", () => {
@@ -361,8 +361,7 @@ describe("Parse Errors", () => {
         expect(err.type).toBe(ParseErrorType.UnexpectedClosingBrace);
         expect(err.position.getLine()).toBe(3);
         expect(err.position.getRange().getStart()).toBe(0);
-        expect(err.position.getRange().getEnd()).toBe(0);
-        expect(err.position.getRange().hasNoLength()).toBeTruthy();
+        expect(err.position.getRange().getEnd()).toBe(1);
     });
 
 });
