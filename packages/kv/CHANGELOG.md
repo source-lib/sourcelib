@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.7.0]
+
+- Revert changes made in version 0.6.0. This behavior was intended.
+
 ## [0.6.0]
 
 - Fixed a mistake with tokenizer and parser outputting all range end to be incremented by 1 resulting in consistent but undesireable behavior
