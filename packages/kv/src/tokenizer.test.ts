@@ -191,6 +191,40 @@ test("Tokenize conditionals", () => {
     expect(tokens[7].value).toBe("[ $TEST && ( !$DEBUG ) ]");
 });
 
+test("Tokenize conditionals on object", () => {
+    const tokens = tokenize(`Test {
+        "kv1" "v1"
+
+        Obj [$DEBUG]
+        {
+            "kv2" "v2"
+        }
+
+        Obj2 [$Debug] {
+            "kv2" "v2"
+        }
+    }`);
+
+    expect(tokens.length).toBe(17);
+    expect(tokens[0].type).toBe(TokenType.Key);
+    expect(tokens[1].type).toBe(TokenType.ObjectStart);
+    expect(tokens[2].type).toBe(TokenType.Key);
+    expect(tokens[3].type).toBe(TokenType.Value);
+    expect(tokens[4].type).toBe(TokenType.Key);
+    expect(tokens[5].type).toBe(TokenType.Conditional);
+    expect(tokens[6].type).toBe(TokenType.ObjectStart);
+    expect(tokens[7].type).toBe(TokenType.Key);
+    expect(tokens[8].type).toBe(TokenType.Value);
+    expect(tokens[9].type).toBe(TokenType.ObjectEnd);
+    expect(tokens[10].type).toBe(TokenType.Key);
+    expect(tokens[11].type).toBe(TokenType.Conditional);
+    expect(tokens[12].type).toBe(TokenType.ObjectStart);
+    expect(tokens[13].type).toBe(TokenType.Key);
+    expect(tokens[14].type).toBe(TokenType.Value);
+    expect(tokens[15].type).toBe(TokenType.ObjectEnd);
+    expect(tokens[16].type).toBe(TokenType.ObjectEnd);
+});
+
 test("Consume Unquoted string", () => {
     let text = "hello_this_is_an_unquoted_string";
     expect(consumeStringUnquoted(text, 0)).toBe(text.length + 1);
