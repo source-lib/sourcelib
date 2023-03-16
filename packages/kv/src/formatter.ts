@@ -69,13 +69,9 @@ export function indentItem(item: Item, indentLevel = 0): Item {
     
     if(item.isLeaf()) {
         return indentLeafValues(item, indentedKey, indentLevel);
+    } else {
+        return indentContainer(item, indentedKey, indentLevel);
     }
-    
-    indentLevel++;
-    const children: Item[] = item.getChildren()!.map(childLiteral => indentItem(childLiteral, indentLevel));
-
-    return Item.createContainer(item.getParent(), indentedKey, children, item.getCondition());
-        
 }
 
 function indentLeafValues(item: Item, indentedKey: Literal, indentLevel: number): Item {
@@ -93,6 +89,21 @@ function indentLeafValues(item: Item, indentedKey: Literal, indentLevel: number)
     });
 
     return Item.createLeaf(item.getParent(), indentedKey, values, item.getCondition());
+}
+
+function indentContainer(item: Item, indentedKey: Literal, indentLevel: number): Item {
+    indentLevel++;
+    const children: Item[] = item.getChildren()!.map(childLiteral => indentItem(childLiteral, indentLevel));
+    
+    const keyEnd: number = indentedKey.getPosition().getRange().getEnd();
+    const c = Item.createContainer(item.getParent(), indentedKey, children, item.getCondition());
+    c.startPopulatingContainer(new Literal(new Position(indentedKey.getPosition().getLine(), new Range(keyEnd + 1, keyEnd + 2)), "{"));
+
+    const closingBracePos = c.getClosingBrace()!.getPosition();
+    const indentStart = getIndentSpacer(indentLevel);
+    c.endPopulatingContainer(new Literal(new Position(closingBracePos.getLine(), new Range(indentStart, indentStart + 1)), "}"));
+
+    return c;
 }
 
 function indentKey(key: Literal, indentLevel: number): Literal {
