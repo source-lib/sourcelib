@@ -1,6 +1,6 @@
 {
   "name": "@sourcelib/vmt",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Source Engine material tools",
   "main": "lib/main.js",
   "scripts": {
