@@ -1,0 +1,14 @@
+name: Deploy package "VMT" to NPM
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'vmt-[0-9].[0-9].[0-9]'
+
+jobs:
+  deploy_kv:
+    uses: ./.github/workflows/_deploy.yml
+    with:
+      package-name: vmt
+    secrets: inherit
