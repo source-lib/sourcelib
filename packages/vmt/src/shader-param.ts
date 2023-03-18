@@ -16,7 +16,7 @@ export class ShaderParam {
 
 }
 
-export type ShaderParamType = "texture" | "material" | "color" | "scalar" | "float" | "int" | "bool" | "vector" | "matrix" | "string" | "unknown";
+export type ShaderParamType = "texture" | "material" | "color" | "scalar" | "float" | "int" | "bool" | "vector" | "matrix" | "string" | "unknown" | "env_cubemap";
 
 export class ShaderParamHint {
 
