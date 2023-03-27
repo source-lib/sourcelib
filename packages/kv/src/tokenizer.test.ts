@@ -234,3 +234,16 @@ test("Consume Unquoted string", () => {
     expect(consumeStringUnquoted(text, 4)).toBe(6);
 });
 
+// To fix https://github.com/source-lib/sourcelib/issues/1
+test("Error when / is not followed by any character", () => {
+
+    const kvFile = `Test {
+    "key1" "v1" /`;
+
+    expect(() => {
+        const tokens = tokenize(kvFile);
+
+    }).not.toThrowError();
+
+
+});
