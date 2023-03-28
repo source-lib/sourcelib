@@ -1,4 +1,4 @@
-import { Document, Item, Literal } from "./parser-types";
+import { Document, Item, Literal, Position, Range } from "./parser-types";
 
 export interface FormattingOptions {
     braceOnNewline: boolean;
