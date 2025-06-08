@@ -1,6 +1,6 @@
 {
   "name": "@sourcelib/kv",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Source Engine KeyValue file parser and tokenizer library",
   "main": "lib/main.js",
   "scripts": {

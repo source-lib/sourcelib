@@ -6,6 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.7.2]
+
+- Fix parser bug
+- Remove function toStringPreservePositions from keyvalue document since it did nothing
+
 ## [0.7.1]
 
 - Fix tokenizer test
