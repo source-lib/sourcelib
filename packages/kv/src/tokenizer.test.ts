@@ -247,3 +247,13 @@ test("Error when / is not followed by any character", () => {
 
 
 });
+
+test("Tokenize compile time report", () => {
+    const kvFile = 
+`"report" 
+{
+	"total_seconds"		"12"
+}
+`;
+    const tokens = tokenize(kvFile);
+});

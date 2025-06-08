@@ -156,6 +156,35 @@ describe("Parse Successes", () => {
         
     });
 
+    test("Parse compile time report", () => {
+        const kvFile = 
+    `"report" 
+    {
+        "total_seconds"		"12"
+    }
+    `;
+        const kvTree = parser.parseText(kvFile);
+        expect(kvTree.getErrors().length).toBe(0);
+        expect(kvTree.getRootItems().length).toBe(1);
+
+        const root = kvTree.getRootItems()[0];
+        expect(root.isRoot()).toBeTruthy();
+        expect(root.isLeaf()).toBeFalsy();
+        expect(root.getKey().getContent()).toBe("\"report\"");
+
+        const children = root.getChildren()!;
+        expect(children).not.toBeNull();
+        expect(children.length).toBe(1);
+        const item1 = children[0];
+        expect(item1.isLeaf()).toBeTruthy();
+        expect(item1.isRoot()).toBeFalsy();
+        expect(item1.getKey().getContent()).toBe("\"total_seconds\"");
+        expect(item1.getValues()).not.toBeNull();
+        expect(item1.getValues()!.length).toBe(1);
+        expect(item1.getValues()![0].getContent()).toBe("\"12\"");
+    });
+    
+
     test("With Conditional", () => {
 
         const kvFile = 

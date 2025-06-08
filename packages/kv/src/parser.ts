@@ -123,28 +123,29 @@ function getKvSetPosition(s: ParserState): Position | null {
 }
 
 function completeOutstandingKvSet(s: ParserState, token: Token): void {
-    if(s.keyToken != null && s.keyToken.line !== token.line) {
-        if(s.valueTokens.length == 0) {
-            
-            const error = new ParseError(ParseErrorType.MissingValue, s.keyToken.getPosition());
-            s.errors.push(error);
-        }
+    if(s.keyToken == null || s.keyToken.line === token.line || token.type === TokenType.ObjectStart) return;
 
-        if(s.currentParent == null) {
-            const pos = getKvSetPosition(s);
-            if(pos != null) {
-                s.errors.push(new ParseError(ParseErrorType.MissingRootObject, pos));
-            }
-        } else {
-            const key = s.keyToken.toLiteral();
-            const values = s.valueTokens.map(t => new Literal(new Position(t.line, t.range), t.value));
-            const condition: Conditional | undefined = s.conditionToken?.toConditional();
-            const item = Item.createLeaf(s.currentParent, key, values, condition);
-            s.currentParent.addChild(item);
-        }
-
-        s.keyToken = null;
-        s.valueTokens = [];
-        s.conditionToken = null;
+    if(s.valueTokens.length == 0) {
+        
+        const error = new ParseError(ParseErrorType.MissingValue, s.keyToken.getPosition());
+        s.errors.push(error);
     }
+
+    if(s.currentParent == null) {
+        const pos = getKvSetPosition(s);
+        if(pos != null) {
+            s.errors.push(new ParseError(ParseErrorType.MissingRootObject, pos));
+        }
+    } else {
+        const key = s.keyToken.toLiteral();
+        const values = s.valueTokens.map(t => new Literal(new Position(t.line, t.range), t.value));
+        const condition: Conditional | undefined = s.conditionToken?.toConditional();
+        const item = Item.createLeaf(s.currentParent, key, values, condition);
+        s.currentParent.addChild(item);
+    }
+
+    s.keyToken = null;
+    s.valueTokens = [];
+    s.conditionToken = null;
+
 }

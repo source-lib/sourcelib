@@ -389,9 +389,4 @@ export class Document {
         return this.errors.length > 0;
     }
 
-    public toStringPreservePositions(): string {
-        
-        return "";
-    }
-
 }
