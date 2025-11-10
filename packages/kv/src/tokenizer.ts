@@ -1,12 +1,10 @@
 import { isWhitespace } from "./string-util";
-import { performance } from "perf_hooks";
 import { TokenList, TokenType, Token, Range } from "./parser-types";
 
 const preprocessorRegex = /#(base|include)/;
 
-const tokenizeFileFunction = performance.timerify(tokenizeInternal);
 export function tokenize(text: string): TokenList {
-    return tokenizeFileFunction(text);
+    return tokenizeInternal(text);
 }
 
 /**
