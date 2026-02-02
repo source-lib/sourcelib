@@ -138,6 +138,13 @@ export const shaderParams = [
         "wikiUri": "https://developer.valvesoftware.com/wiki/$basetexture"
     },
     {
+        "name": "$basetexturetransform",
+        "type": "string",
+        "defaultCompletion": "center 0.5 0.5 scale 1 1 rotate 0 translate 0 0",
+        "description": "Transforms the texture before use in the material. This does not affect lightmaps on the surface. \nThis will transform other textures such as $detail, $bumpmap and $envmapmask, if their own respective texture transform parameters haven't been set.",
+        "wikiUri": "https://developer.valvesoftware.com/wiki/$basetexture#$basetexturetransform"
+    },
+    {
         "name": "$blendmodulatetexture",
         "type": "texture"
     },
@@ -870,6 +877,27 @@ export const shaderParams = [
         "defaultCompletion": 1,
         "description": "Self illumination applies 'fake' light to a surface, regardless of the true light that the surface receives from the environment.",
         "wikiUri": "https://developer.valvesoftware.com/wiki/Glowing_Textures#.24selfillum"
+    },
+    {
+        "name": "$parallax",
+        "type": "bool",
+        "defaultCompletion": 1,
+        "description": "Enables parallax occlussion mapping on the Strata PBR shader.",
+        "wikiUri": "https://wiki.stratasource.org/material/pbr/parallaxmapping"
+    },
+    {
+        "name": "$parallaxcenter",
+        "type": "scalar",
+        "defaultCompletion": 0.5,
+        "description": "Essentially defines the distance of the highest point of the material from the plane it is applied to, or how far away the highest point is, on a scale from 0-1; the higher the number the closer to the plane it is. It is recommended adjust this parameter with Hammer open, as materials reload instantly and you can move your camera around freely.",
+        "wikiUri": "https://wiki.stratasource.org/material/pbr/parallaxmapping"
+    },
+    {
+        "name": "$parallaxdepth",
+        "type": "scalar",
+        "defaultCompletion": 0.1,
+        "description": "Defines the intensity of the effect, on a scale of 0-1; the higher the number the greater the intensity. '0.1' is a good starting point, but you may need to increase/decrease it to get the desired effect. Values to the hundredths place are accepted.",
+        "wikiUri": "https://wiki.stratasource.org/material/pbr/parallaxmapping"
     }
 ] as ShaderParam[];
 export const internalTextures = [
