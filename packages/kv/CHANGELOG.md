@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.8.0]
+
+- Added KvSerializer to serialize and deserialize keyvalue documents to and from javascript objects
+
 ## [0.7.2]
 
 - Fix parser bug
