@@ -7,7 +7,7 @@ test("Serialize Object simple", () => {
         prop2: 10,
         boolProp: false,
         boolProp2: true,
-        dateProp: new Date(2004, 10, 11, 8, 10, 0),
+        dateProp: new Date(2004, 10, 11, 8, 10, 0).toISOString(),
     };
 
     const kvStr = KvSerializer.serialize(obj);
@@ -16,7 +16,7 @@ test("Serialize Object simple", () => {
   "prop2" "10"
   "boolProp" "false"
   "boolProp2" "true"
-  "dateProp" "Thu Nov 11 2004 08:10:00 GMT+0100 (Central European Standard Time)"
+  "dateProp" "2004-11-11T07:10:00.000Z"
 }`);
 });
 
