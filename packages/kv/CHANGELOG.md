@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.9.0]
+
+- Added detectArrays option to deserializer which automatically detects array-like keyvalue structures and resolves them as javascript arrays
+- Fixed deserialization resolving things as numbers when they shouldn't have been
+- Removed test script files from shipped module
+
 ## [0.8.0]
 
 - Added KvSerializer to serialize and deserialize keyvalue documents to and from javascript objects
