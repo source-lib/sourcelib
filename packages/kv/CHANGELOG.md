@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.9.1]
+
+- Fix no files being shipped in 0.9.1
+
 ## [0.9.0]
 
 - Added detectArrays option to deserializer which automatically detects array-like keyvalue structures and resolves them as javascript arrays
