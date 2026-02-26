@@ -1,13 +1,25 @@
 import {Document, Item, Literal} from "./parser-types";
+import {isFloatValue, isIntegerValue} from "./string-util";
 
 
 type KvNodeValue = string | number | boolean;
-type KvNode = { [key: string]: KvNodeValue | KvNodeValue[] | KvNode };
+type KvNodeRecord = { [key: string]: KvNodeValue | KvNodeValue[] | KvNode };
+type KvNodeArray = (KvNode | KvNodeValue)[];
+type KvNode = KvNodeRecord | KvNodeArray;
 
+export interface KvSerializeOptions {
+    name?: string;
+    indentSpaces?: number;
+    indentTabs?: boolean;
+}
+
+export interface KvDeserializeOptions {
+    detectArrays?: boolean;
+}
 
 export const KvSerializer = {
 
-    serialize(obj: Record<string, unknown>, options?: { name?: string, indentSpaces?: number, indentTabs?: boolean }, nestedLevel = 0): string {
+    serialize(obj: Record<string, unknown>, options?: KvSerializeOptions, nestedLevel = 0): string {
         let indentObjStr = "";
         let indentStrKv = "";
         let indentChar = "";
@@ -44,8 +56,12 @@ export const KvSerializer = {
         return fullStr;
     },
 
-    deserialize(doc: Document): KvNode[] {
-        return doc.getRootItems().map(_deserializeItem).filter(i => i !== undefined) as KvNode[];
+    deserialize(doc: Document, options?: KvDeserializeOptions): KvNode[] {
+        const nodes = doc.getRootItems().map(_deserializeItem).filter(i => i !== undefined) as KvNode[];
+        if(options?.detectArrays) {
+            return _recursiveTransformNodesToArray(nodes);
+        }
+        return nodes;
     }
 };
 
@@ -86,15 +102,66 @@ function _deserializeItemValue(vals: Literal[]): KvNodeValue | KvNodeValue[] | u
     }
 }
 
-function _transformKvValue(val: string): KvNodeValue {
-    const float = Number.parseFloat(val);
-    if(!Number.isNaN(float)) {
-        return float;
+function _recursiveTransformNodesToArray(nodes: KvNode[]): KvNode[] {
+    const result: KvNode[] = [];
+    for (const node of nodes) {
+        result.push(_transformNodeToArray(node));
+    }
+    return result;
+}
+
+function _transformNodeToArray(node: KvNode): KvNode {
+    if (typeof node !== "object") {
+        return node;
     }
 
-    const int = Number.parseInt(val);
-    if(!Number.isNaN(int)) {
-        return int;
+    const resultNode: KvNodeRecord = {};
+    const entries = Object.entries(node);
+    for (const [k, v] of entries) {
+        if(typeof v === "object") {
+            const newV = _transformNodeToArray(v);
+            if (_isArrayNode(newV)) {
+                resultNode[k] = Array.from(Object.values(newV));
+            } else {
+                resultNode[k] = v;
+            }
+        } else {
+            resultNode[k] = v;
+        }
+    }
+
+    return resultNode;
+}
+
+function _isArrayNode(node: KvNode): boolean {
+    let prev = -1;
+    for(const key of Object.keys(node)) {
+        const intKey = Number.parseInt(key);
+        if(Number.isNaN(intKey)) {
+            return false;
+        }
+
+        if(intKey !== prev + 1) {
+            return false;
+        }
+
+        prev += 1;
+    }
+
+    return true;
+}
+
+function _transformKvValue(val: string): KvNodeValue {
+    if(isFloatValue(val)) {
+        const float = Number.parseFloat(val);
+        if(!Number.isNaN(float)) {
+            return float;
+        }
+    } else if(isIntegerValue(val)) {
+        const int = Number.parseInt(val);
+        if(!Number.isNaN(int)) {
+            return int;
+        }
     }
 
     if(val === "true") {
