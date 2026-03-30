@@ -140,7 +140,7 @@ export const shaderParams = [
     {
         "name": "$basetexturetransform",
         "type": "string",
-        "defaultCompletion": "center 0.5 0.5 scale 1 1 rotate 0 translate 0 0",
+        "defaultCompletion": "\"center 0.5 0.5 scale 1 1 rotate 0 translate 0 0\"",
         "description": "Transforms the texture before use in the material. This does not affect lightmaps on the surface. \nThis will transform other textures such as $detail, $bumpmap and $envmapmask, if their own respective texture transform parameters haven't been set.",
         "wikiUri": "https://developer.valvesoftware.com/wiki/$basetexture#$basetexturetransform"
     },
@@ -898,6 +898,23 @@ export const shaderParams = [
         "defaultCompletion": 0.1,
         "description": "Defines the intensity of the effect, on a scale of 0-1; the higher the number the greater the intensity. '0.1' is a good starting point, but you may need to increase/decrease it to get the desired effect. Values to the hundredths place are accepted.",
         "wikiUri": "https://wiki.stratasource.org/material/pbr/parallaxmapping"
+    },
+    {
+        "name": "$blendtintbymraoalpha",
+        "type": "bool",
+        "defaultCompletion": 1,
+        "description": "When enabled, the alpha channel of the MRAO texture will be used as a base color tint mask",
+        "wikiUri": "https://wiki.stratasource.org/material/pbr/pbrshader"
+    },
+    {
+        "name": "$srgbtint",
+        "type": "color",
+        "description": "For tinting model materials with srgb colors"
+    },
+    {
+        "name": "$emissionscale",
+        "type": "color",
+        "description": "Tints the emission texture's brightness by this color. Can go above 1 to go extra bright"
     }
 ] as ShaderParam[];
 export const internalTextures = [
