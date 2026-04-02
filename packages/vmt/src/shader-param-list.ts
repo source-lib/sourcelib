@@ -915,6 +915,11 @@ export const shaderParams = [
         "name": "$emissionscale",
         "type": "color",
         "description": "Tints the emission texture's brightness by this color. Can go above 1 to go extra bright"
+    },
+    {
+        "name": "$emissiontexture",
+        "type": "texture",
+        "description": "Defines the emission texture"
     }
 ] as ShaderParam[];
 export const internalTextures = [
