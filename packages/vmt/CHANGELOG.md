@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.5.0]
+
+- Added more shader parameters
+
 ## [0.3.1]
 
 - Added vmt shader parameter type "env_cubemap"
