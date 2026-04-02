@@ -6,6 +6,10 @@ on:
     tags:
       - 'vmt-[0-9].[0-9].[0-9]'
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   deploy_kv:
     uses: ./.github/workflows/_deploy.yml
