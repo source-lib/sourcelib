@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 The versions in this file adhere to [semantic versioning](https://semver.org/).
 
+## [0.6.0]
+
+- Added shader params: $decaltexture $decalbump $decalmrao %noportal
+
 ## [0.5.0]
 
 - Added more shader parameters
