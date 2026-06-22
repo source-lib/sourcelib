@@ -107,6 +107,12 @@ export const shaderParams = [
         "wikiUri": "https://developer.valvesoftware.com/wiki/Controlling_portals"
     },
     {
+        "name": "%nopaint",
+        "type": "bool",
+        "defaultCompletion": 1,
+        "description": "Compile time parameter to mark this surface as non-paintable. Unnecessary on models."
+    },
+    {
         "name": "%tooltexture",
         "type": "texture",
         "defaultCompletion": 1,
@@ -222,7 +228,21 @@ export const shaderParams = [
     },
     {
         "name": "$decaltexture",
-        "type": "texture"
+        "type": "texture",
+        "wikiUri": "https://developer.valvesoftware.com/wiki/$decaltexture",
+        "description": "Decal base color texture to use for the UV2 PBR decals"
+    },
+    {
+        "name": "$decalmrao",
+        "type": "texture",
+        "wikiUri": "https://developer.valvesoftware.com/wiki/$decaltexture",
+        "description": "Decal MRAO texture to use for the UV2 PBR decals"
+    },
+    {
+        "name": "$decalbump",
+        "type": "texture",
+        "wikiUri": "https://developer.valvesoftware.com/wiki/$decaltexture",
+        "description": "Decal bump map texture to use for the UV2 PBR decals"
     },
     {
         "name": "$detail",
