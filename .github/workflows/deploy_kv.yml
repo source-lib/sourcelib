@@ -16,3 +16,4 @@ jobs:
     with:
       package-name: kv
     secrets: inherit
+    environment: Deploy

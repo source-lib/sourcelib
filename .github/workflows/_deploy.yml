@@ -19,6 +19,7 @@ jobs:
     defaults:
       run:
         working-directory: ./packages/${{ inputs.package-name }}
+    environment: Deploy
 
     steps:
     - uses: actions/checkout@v3

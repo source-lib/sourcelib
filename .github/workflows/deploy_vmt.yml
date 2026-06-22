@@ -16,3 +16,4 @@ jobs:
     with:
       package-name: vmt
     secrets: inherit
+    environment: Deploy
