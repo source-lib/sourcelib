@@ -15,4 +15,3 @@ jobs:
     uses: ./.github/workflows/_deploy.yml
     with:
       package-name: kv
-    secrets: inherit
