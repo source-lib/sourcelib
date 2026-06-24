@@ -13,10 +13,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install
-        run: npm ci --workspaces
+        run: npm ci
 
       - name: Lint
-        run: npm run lint --workspaces
+        run: npm run lint
 
       - name: Test
-        run: npm test --workspaces
+        run: npm test

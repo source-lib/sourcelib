@@ -1,8 +1,0 @@
-.vscode
-jest.config.ts
-bench.config.ts
-benchmarks
-*.test.ts
-*.bench.ts
-src
-!lib

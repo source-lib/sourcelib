@@ -1,11 +1,6 @@
 
 # compiled output
-packages/*/lib
-packages/*/node_modules
-
-# Test coverage output
-packages/*/coverage
-packages/*/benchmarks
+lib
 
 # dependencies
 node_modules

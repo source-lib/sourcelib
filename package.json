@@ -1,7 +1,32 @@
 {
-    "name": "soucelib",
-    "private": true,
-    "workspaces": [
-        "packages/*"
-    ]
+  "name": "sourcelib",
+  "version": "0.1.1",
+  "description": "Library for interfacing with source engine files",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/source-lib"
+  },
+  "license": "MIT",
+  "author": "Stefan Heinz",
+  "type": "module",
+  "main": "lib/main.js",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc -p ./src",
+    "test": "vitest ./tests",
+    "lint": "eslint",
+    "bench": "vitest bench ./tests"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.0.1",
+    "eslint": "^10.5.0",
+    "globals": "^17.7.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.0",
+    "vitest": "^5.0.0-beta.5"
+  },
+  "dependencies": {
+    "pathe": "^2.0.3"
+  }
 }

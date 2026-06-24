@@ -1,0 +1,9 @@
+.vscode
+.github
+.idea
+*.test.ts
+*.bench.ts
+eslint.config.js
+tsconfig.json
+src
+!out
