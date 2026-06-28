@@ -1,76 +1,76 @@
-import {test, expect} from "vitest";
-import { isFloatValue, isIntegerValue, isQuoted, isScalarValue, isWhitespace, stripQuotes } from "../../src/kv/string-util";
+import { test, expect } from "vitest";
+import { KvStringUtil } from "../../src/kv/KvStringUtil";
 
 test("Is Quoted", () => {
-    expect(isQuoted("")).toBeFalsy();
-    expect(isQuoted("hi")).toBeFalsy();
-    expect(isQuoted("'hi'")).toBeTruthy();
-    expect(isQuoted("\"hi\"")).toBeTruthy();
+    expect(KvStringUtil.isQuoted("")).toBeFalsy();
+    expect(KvStringUtil.isQuoted("hi")).toBeFalsy();
+    expect(KvStringUtil.isQuoted("'hi'")).toBeTruthy();
+    expect(KvStringUtil.isQuoted('"hi"')).toBeTruthy();
 
-    expect(isQuoted("'hi\"")).toBeFalsy();
+    expect(KvStringUtil.isQuoted("'hi\"")).toBeFalsy();
 
-    expect(isQuoted("'hi")).toBeFalsy();
+    expect(KvStringUtil.isQuoted("'hi")).toBeFalsy();
 });
 
 test("Strip Quotes", () => {
-    expect(stripQuotes("")).toBe("");
-    expect(stripQuotes("'")).toBe("'");
-    expect(stripQuotes("''")).toBe("");
-    expect(stripQuotes("hi")).toBe("hi");
-    expect(stripQuotes("\"hi\"")).toBe("hi");
-    expect(stripQuotes("\"hi")).toBe("\"hi");
+    expect(KvStringUtil.stripQuotes("")).toBe("");
+    expect(KvStringUtil.stripQuotes("'")).toBe("'");
+    expect(KvStringUtil.stripQuotes("''")).toBe("");
+    expect(KvStringUtil.stripQuotes("hi")).toBe("hi");
+    expect(KvStringUtil.stripQuotes('"hi"')).toBe("hi");
+    expect(KvStringUtil.stripQuotes('"hi')).toBe('"hi');
 });
 
 test("IsWhitespace", () => {
-    expect(isWhitespace("")).toBeFalsy();
-    expect(isWhitespace("a")).toBeFalsy();
-    expect(isWhitespace(" ")).toBeTruthy();
-    expect(isWhitespace("\t")).toBeTruthy();
-    expect(isWhitespace("\n")).toBeTruthy();
-    expect(isWhitespace("\r")).toBeTruthy();
+    expect(KvStringUtil.isWhitespace("")).toBeFalsy();
+    expect(KvStringUtil.isWhitespace("a")).toBeFalsy();
+    expect(KvStringUtil.isWhitespace(" ")).toBeTruthy();
+    expect(KvStringUtil.isWhitespace("\t")).toBeTruthy();
+    expect(KvStringUtil.isWhitespace("\n")).toBeTruthy();
+    expect(KvStringUtil.isWhitespace("\r")).toBeTruthy();
 });
 
 test("Is Float", () => {
-    expect(isFloatValue("")).toBeFalsy();
-    expect(isFloatValue("aaa")).toBeFalsy();
-    expect(isFloatValue("hi3.04fgdf")).toBeFalsy();
-    expect(isFloatValue("0")).toBeTruthy();
-    expect(isFloatValue("0.0")).toBeTruthy();
-    expect(isFloatValue("1")).toBeTruthy();
-    expect(isFloatValue("1.0")).toBeTruthy();
-    expect(isFloatValue("3.1415")).toBeTruthy();
-    expect(isFloatValue(".1")).toBeTruthy();
-    expect(isFloatValue("0.1")).toBeTruthy();
-    expect(isFloatValue("277.00")).toBeTruthy();
-    expect(isFloatValue("-277.00")).toBeTruthy();
+    expect(KvStringUtil.isFloatValue("")).toBeFalsy();
+    expect(KvStringUtil.isFloatValue("aaa")).toBeFalsy();
+    expect(KvStringUtil.isFloatValue("hi3.04fgdf")).toBeFalsy();
+    expect(KvStringUtil.isFloatValue("0")).toBeTruthy();
+    expect(KvStringUtil.isFloatValue("0.0")).toBeTruthy();
+    expect(KvStringUtil.isFloatValue("1")).toBeTruthy();
+    expect(KvStringUtil.isFloatValue("1.0")).toBeTruthy();
+    expect(KvStringUtil.isFloatValue("3.1415")).toBeTruthy();
+    expect(KvStringUtil.isFloatValue(".1")).toBeTruthy();
+    expect(KvStringUtil.isFloatValue("0.1")).toBeTruthy();
+    expect(KvStringUtil.isFloatValue("277.00")).toBeTruthy();
+    expect(KvStringUtil.isFloatValue("-277.00")).toBeTruthy();
 });
 
 test("Is Scalar", () => {
-    expect(isScalarValue("")).toBeFalsy();
-    expect(isScalarValue("aaa")).toBeFalsy();
-    expect(isScalarValue("hi3.04fgdf")).toBeFalsy();
-    expect(isScalarValue("0")).toBeTruthy();
-    expect(isScalarValue("0.0")).toBeTruthy();
-    expect(isScalarValue("1")).toBeTruthy();
-    expect(isScalarValue("1.0")).toBeTruthy();
-    expect(isScalarValue("3.1415")).toBeFalsy();
-    expect(isScalarValue(".1")).toBeTruthy();
-    expect(isScalarValue("0.1")).toBeTruthy();
-    expect(isScalarValue("277.00")).toBeFalsy();
+    expect(KvStringUtil.isScalarValue("")).toBeFalsy();
+    expect(KvStringUtil.isScalarValue("aaa")).toBeFalsy();
+    expect(KvStringUtil.isScalarValue("hi3.04fgdf")).toBeFalsy();
+    expect(KvStringUtil.isScalarValue("0")).toBeTruthy();
+    expect(KvStringUtil.isScalarValue("0.0")).toBeTruthy();
+    expect(KvStringUtil.isScalarValue("1")).toBeTruthy();
+    expect(KvStringUtil.isScalarValue("1.0")).toBeTruthy();
+    expect(KvStringUtil.isScalarValue("3.1415")).toBeFalsy();
+    expect(KvStringUtil.isScalarValue(".1")).toBeTruthy();
+    expect(KvStringUtil.isScalarValue("0.1")).toBeTruthy();
+    expect(KvStringUtil.isScalarValue("277.00")).toBeFalsy();
 });
 
 test("Is Integer", () => {
-    expect(isIntegerValue("")).toBeFalsy();
-    expect(isIntegerValue("aaa")).toBeFalsy();
-    expect(isIntegerValue("hi3.04fgdf")).toBeFalsy();
-    expect(isIntegerValue("0")).toBeTruthy();
-    expect(isIntegerValue("0.0")).toBeFalsy();
-    expect(isIntegerValue("1")).toBeTruthy();
-    expect(isIntegerValue("1.0")).toBeFalsy();
-    expect(isIntegerValue("3.1415")).toBeFalsy();
-    expect(isIntegerValue(".1")).toBeFalsy();
-    expect(isIntegerValue("0.1")).toBeFalsy();
-    expect(isIntegerValue("277")).toBeTruthy();
-    expect(isIntegerValue("277.00")).toBeFalsy();
-    expect(isIntegerValue("-277")).toBeTruthy();
+    expect(KvStringUtil.isIntegerValue("")).toBeFalsy();
+    expect(KvStringUtil.isIntegerValue("aaa")).toBeFalsy();
+    expect(KvStringUtil.isIntegerValue("hi3.04fgdf")).toBeFalsy();
+    expect(KvStringUtil.isIntegerValue("0")).toBeTruthy();
+    expect(KvStringUtil.isIntegerValue("0.0")).toBeFalsy();
+    expect(KvStringUtil.isIntegerValue("1")).toBeTruthy();
+    expect(KvStringUtil.isIntegerValue("1.0")).toBeFalsy();
+    expect(KvStringUtil.isIntegerValue("3.1415")).toBeFalsy();
+    expect(KvStringUtil.isIntegerValue(".1")).toBeFalsy();
+    expect(KvStringUtil.isIntegerValue("0.1")).toBeFalsy();
+    expect(KvStringUtil.isIntegerValue("277")).toBeTruthy();
+    expect(KvStringUtil.isIntegerValue("277.00")).toBeFalsy();
+    expect(KvStringUtil.isIntegerValue("-277")).toBeTruthy();
 });

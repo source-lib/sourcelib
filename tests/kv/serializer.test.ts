@@ -1,6 +1,6 @@
-import {test, expect} from "vitest";
-import {KvSerializer} from "../../src/kv/serializer";
-import {parseText} from "../../src/kv/parser";
+import { test, expect } from "vitest";
+import { KvSerializer } from "../../src/kv/KvSerializer";
+import { KvParser } from "../../src/kv/KvParser";
 
 test("Serialize Object simple", () => {
     const obj = {
@@ -24,8 +24,8 @@ test("Serialize Object nested", () => {
         prop1: "string val",
         sub: {
             more: 10,
-            stuff: "but nested"
-        }
+            stuff: "but nested",
+        },
     };
 
     const kvStr = KvSerializer.serialize(obj);
@@ -39,7 +39,7 @@ test("Serialize Object nested", () => {
 });
 
 test("Deserialize Item", () => {
-    const doc = parseText(`"Object" {
+    const doc = KvParser.parseText(`"Object" {
         "prop1" "string val"
         "sub" {
             "more" "10"
@@ -70,7 +70,7 @@ test("Deserialize Item", () => {
 });
 
 test("Deserialize mdlinfo", () => {
-   const doc = parseText(`"_hr/props/pedestal_button"
+    const doc = KvParser.parseText(`"_hr/props/pedestal_button"
 {
         "general"
         {
@@ -110,7 +110,10 @@ test("Deserialize mdlinfo", () => {
     expect(nodes).toHaveLength(1);
 
     expect(nodes[0]).toHaveProperty("general.name", "_hr/props/pedestal_button");
-    expect(nodes[0]).toHaveProperty("general.filename", "/home/stefan/Projects/PortalRevolution2/game/revolution/models/_hr/props/pedestal_button.mdl");
+    expect(nodes[0]).toHaveProperty(
+        "general.filename",
+        "/home/stefan/Projects/PortalRevolution2/game/revolution/models/_hr/props/pedestal_button.mdl",
+    );
     expect(nodes[0]).toHaveProperty("general.id", 1414743113);
     expect(nodes[0]).toHaveProperty("general.version", 49);
     expect(nodes[0]).toHaveProperty("general.checksum", 1323378053);
@@ -132,5 +135,8 @@ test("Deserialize mdlinfo", () => {
     expect((nodes[0] as any).cdmaterials).toHaveLength(1);
     expect((nodes[0] as any).cdmaterials[0]).toBe("_hr/models/props/");
 
-    expect(nodes[0]).toHaveProperty("mdlkeyvalue.qc_path.value", "models\\_hr\\props\\pedestal_button\\pedestal_button.qc");
+    expect(nodes[0]).toHaveProperty(
+        "mdlkeyvalue.qc_path.value",
+        "models\\_hr\\props\\pedestal_button\\pedestal_button.qc",
+    );
 });

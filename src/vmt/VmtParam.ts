@@ -1,5 +1,4 @@
 export class ShaderParam {
-
     public name: string;
     public type: ShaderParamType;
     public defaultCompletion?: string | boolean | number;
@@ -13,13 +12,23 @@ export class ShaderParam {
         this.description = description;
         this.wikiUri = wikiUri;
     }
-
 }
 
-export type ShaderParamType = "texture" | "material" | "color" | "scalar" | "float" | "int" | "bool" | "vector" | "matrix" | "string" | "unknown" | "env_cubemap";
+export type ShaderParamType =
+    | "texture"
+    | "material"
+    | "color"
+    | "scalar"
+    | "float"
+    | "int"
+    | "bool"
+    | "vector"
+    | "matrix"
+    | "string"
+    | "unknown"
+    | "env_cubemap";
 
 export class ShaderParamHint {
-
     public paramName: string;
     public valueRegex: RegExp;
 
@@ -27,5 +36,4 @@ export class ShaderParamHint {
         this.paramName = paramName;
         this.valueRegex = valueRegex;
     }
-
 }

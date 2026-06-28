@@ -1,5 +1,5 @@
-import {test, expect} from "vitest";
-import { getColorMatches, ColorMatchParenthesisType } from "../../src/vmt/color";
+import { test, expect } from "vitest";
+import { getColorMatches, ColorMatchParenthesisType } from "../../src/vmt/VmtColor";
 
 test("Color Matches Valid 0-255", () => {
     const desc = getColorMatches("{0 255 10}");

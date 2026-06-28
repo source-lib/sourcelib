@@ -1,5 +1,3 @@
-import { ClrTagInfo, Color, populateColorTagMatches } from "./caption-tag-matches";
+import { CaptionColorTag, CaptionColor, CaptionTags } from "./CaptionTags.js";
 
-export {
-    ClrTagInfo, Color, populateColorTagMatches
-};
+export { CaptionColorTag, CaptionColor, CaptionTags };

@@ -2,7 +2,7 @@ export enum ColorMatchParenthesisType {
     None,
     Brackets,
     Braces,
-    Inconsistent
+    Inconsistent,
 }
 
 export class ColorMatchDescription {
@@ -24,7 +24,12 @@ function createOutOfBounds(parenthesisType: ColorMatchParenthesisType): ColorMat
 }
 
 // Rgb must be between 0 and 255
-function createValid(r: number, g: number, b: number, parenthesisType: ColorMatchParenthesisType): ColorMatchDescription {
+function createValid(
+    r: number,
+    g: number,
+    b: number,
+    parenthesisType: ColorMatchParenthesisType,
+): ColorMatchDescription {
     const desc = new ColorMatchDescription();
     desc.r = r;
     desc.g = g;
@@ -41,24 +46,24 @@ function createInconsistent(): ColorMatchDescription {
 }
 
 function isSameParenSet(p1: string, p2: string): boolean {
-    return p1 === "{" && p2 === "}" || p1 === "[" && p2 === "]";
+    return (p1 === "{" && p2 === "}") || (p1 === "[" && p2 === "]");
 }
 
 export function getColorMatches(colorString: string): ColorMatchDescription {
     // Regex matches color syntax [1 0 0.3] or {255 0 4}
     // Matches more than the actual syntax allows to allow for more specific analysis and error messages later on instead of just not matching
     const matches = colorString.match(/ *(\[|\{) *(-?\d*\.?\d+) *(-?\d*\.?\d+) *(-?\d*\.?\d+) *(\]|\}) */);
-    if(!matches) return new ColorMatchDescription();
+    if (!matches) return new ColorMatchDescription();
 
     const p1 = matches[1];
     const p2 = matches[5];
-    if(!isSameParenSet(p1, p2)) {
+    if (!isSameParenSet(p1, p2)) {
         return createInconsistent();
     }
     let is255 = false;
     const limitMin = 0;
     let limitMax = 1;
-    if(p1 === "{") {
+    if (p1 === "{") {
         is255 = true;
         limitMax = 255;
     }
@@ -67,11 +72,11 @@ export function getColorMatches(colorString: string): ColorMatchDescription {
     let r = parseFloat(matches[2]);
     let g = parseFloat(matches[3]);
     let b = parseFloat(matches[4]);
-    
-    if(r > limitMax || r < limitMin || g > limitMax || g < limitMin || b > limitMax || b < limitMin) {
+
+    if (r > limitMax || r < limitMin || g > limitMax || g < limitMin || b > limitMax || b < limitMin) {
         return createOutOfBounds(parenType);
     }
-    if(is255) {
+    if (is255) {
         r /= 255;
         g /= 255;
         b /= 255;

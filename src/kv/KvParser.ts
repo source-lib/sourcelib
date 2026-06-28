@@ -1,4 +1,5 @@
-import { isQuoted, stripQuotes } from "./string-util";
+import { KvTokenizer } from "./KvTokenizer.js";
+import { KvStringUtil } from "./KvStringUtil.js";
 
 export enum TokenType {
     Comment,
@@ -7,7 +8,7 @@ export enum TokenType {
     ObjectStart,
     ObjectEnd,
     PreprocessorKey,
-    Conditional
+    Conditional,
 }
 
 export class Token {
@@ -26,7 +27,7 @@ export class Token {
     public toLiteral(): Literal {
         return new Literal(this.getPosition(), this.value);
     }
-    
+
     public getPosition(): Position {
         return new Position(this.line, this.range);
     }
@@ -37,23 +38,20 @@ export class Token {
 }
 
 export class TokenList extends Array<Token> {
-
     public static create(tokens: Token[]): TokenList {
         return new TokenList(...tokens);
     }
 
     public getAllOnLine(line: number): TokenList {
-        return TokenList.create(this.filter(t => t.line == line));
+        return TokenList.create(this.filter((t) => t.line == line));
     }
 
     public getAllOfType(type: TokenType): TokenList {
-        return TokenList.create(this.filter(t => t.type == type));
+        return TokenList.create(this.filter((t) => t.type == type));
     }
-
 }
 
 export class ParseError {
-
     public type: ParseErrorType;
     public position: Position;
 
@@ -61,7 +59,6 @@ export class ParseError {
         this.type = type;
         this.position = position;
     }
-
 }
 
 export enum ParseErrorType {
@@ -78,19 +75,19 @@ export class Range {
     private end: number;
 
     constructor(start: number, end: number) {
-        if(start < 0) {
+        if (start < 0) {
             throw new RangeError("Start must not be less than zero");
         }
-        if(end < 0) {
+        if (end < 0) {
             throw new RangeError("End must not be less than zero");
         }
-        if(end < start) {
+        if (end < start) {
             throw new RangeError("End must not be less than start");
         }
-        if(!Number.isInteger(start)) {
+        if (!Number.isInteger(start)) {
             throw new RangeError("Start must not be a float");
         }
-        if(!Number.isInteger(end)) {
+        if (!Number.isInteger(end)) {
             throw new RangeError("End must not be a float");
         }
         this.start = start;
@@ -110,13 +107,13 @@ export class Range {
     }
 
     public moveBy(delta: number): void {
-        if(!Number.isInteger(delta)) {
+        if (!Number.isInteger(delta)) {
             throw new RangeError("Delta must not be a float");
         }
         const destStart = this.start + delta;
         const destEnd = this.end + delta;
 
-        if(destStart < 0 || destEnd < 0) {
+        if (destStart < 0 || destEnd < 0) {
             throw new RangeError("Resulting range is less than 0");
         }
         this.start = destStart;
@@ -163,7 +160,7 @@ export class Position {
     private range: Range;
 
     constructor(line: number, range: Range) {
-        if(line < 0) {
+        if (line < 0) {
             throw new RangeError("Line cannot be less than zero");
         }
         this.line = line;
@@ -183,15 +180,15 @@ export class Position {
     }
 
     /**
-     * 
+     *
      * @param delta Where to move the line to. Must be an unsigned int
      * @returns Returns 'this', mutated
      */
     public moveToLine(line: number): Position {
-        if(!Number.isInteger(line)) {
+        if (!Number.isInteger(line)) {
             throw new RangeError("Line must not be float");
         }
-        if(line < 0) {
+        if (line < 0) {
             throw new RangeError("Line cannot be less than zero");
         }
         this.line = line;
@@ -199,16 +196,16 @@ export class Position {
     }
 
     /**
-     * 
+     *
      * @param delta Amount of lines to move forward (down). Must be an int. Clamps at 0
      * @returns Returns 'this', mutated
      */
     public moveLineBy(delta: number): Position {
-        if(!Number.isInteger(delta)) {
+        if (!Number.isInteger(delta)) {
             throw new RangeError("Delta must not be float");
         }
         const dest = this.line - delta;
-        if(dest < 0) {
+        if (dest < 0) {
             throw new RangeError("The resulting line number cannot be less than zero.");
         }
         return this;
@@ -225,28 +222,27 @@ export class Literal {
     }
 
     public isQuoted(): boolean {
-        return isQuoted(this.content);
+        return KvStringUtil.isQuoted(this.content);
     }
 
     public getPosition(): Position {
         return this.position;
     }
-    
+
     public getUnquotedContent(): string {
-        if( !this.isQuoted() ) 
-            return this.content;
-        
-        return stripQuotes(this.content);
+        if (!this.isQuoted()) return this.content;
+
+        return KvStringUtil.stripQuotes(this.content);
     }
-    
+
     public getContent(): string {
         return this.content;
     }
-    
+
     public asUnquoted(): Literal {
-        if( !this.isQuoted() ) return this;
-        
-        const newContent = stripQuotes(this.getContent());
+        if (!this.isQuoted()) return this;
+
+        const newContent = KvStringUtil.stripQuotes(this.getContent());
         const newRange = this.getPosition().getRange().copy();
         newRange.moveStartBy(1);
         newRange.moveEndBy(-1);
@@ -261,15 +257,11 @@ export class Literal {
     public copy(): Literal {
         return new Literal(this.position, this.content);
     }
-    
 }
 
-export class Conditional extends Literal {
-
-}
+export class Conditional extends Literal {}
 
 export class Item {
-
     private parent: Item | null;
     private key: Literal;
     private children: Item[] | null;
@@ -288,13 +280,23 @@ export class Item {
         this.closingBrace = null;
     }
 
-    public static createLeaf(parent: Item | null, key: Literal, value: Literal[], condition: Conditional | null = null): Item {
+    public static createLeaf(
+        parent: Item | null,
+        key: Literal,
+        value: Literal[],
+        condition: Conditional | null = null,
+    ): Item {
         const item = new Item(key, parent, condition);
         item.values = value;
         return item;
     }
 
-    public static createContainer(parent: Item | null, key: Literal, children: Item[], condition: Conditional | null = null): Item {
+    public static createContainer(
+        parent: Item | null,
+        key: Literal,
+        children: Item[],
+        condition: Conditional | null = null,
+    ): Item {
         const item = new Item(key, parent, condition);
         item.children = children;
         return item;
@@ -324,7 +326,7 @@ export class Item {
     }
 
     public addChild(child: Item): void {
-        if( this.children == null ) {
+        if (this.children == null) {
             this.children = [];
         }
         this.children.push(child);
@@ -368,7 +370,6 @@ export class Item {
 }
 
 export class Document {
-
     private rootItems: Item[];
     private errors: ParseError[];
 
@@ -388,5 +389,152 @@ export class Document {
     public hasErrors(): boolean {
         return this.errors.length > 0;
     }
+}
 
+interface ParserState {
+    currentParent: Item | null;
+    keyToken: Token | null;
+    valueTokens: Token[];
+    conditionToken: Token | null;
+
+    errors: Array<ParseError>;
+    roots: Array<Item>;
+}
+
+export const KvParser = {
+    parseText(text: string): Document {
+        const tokens = KvTokenizer.tokenize(text);
+        const document = _parseTokensInternal(tokens);
+        return document;
+    },
+    parseTokens(tokens: TokenList): Document {
+        return _parseTokensInternal(tokens);
+    },
+};
+
+export function _parseTokensInternal(tokens: TokenList): Document {
+    const state = {
+        conditionToken: null,
+        currentParent: null,
+        keyToken: null,
+        valueTokens: [],
+        errors: new Array<ParseError>(),
+        roots: new Array<Item>(),
+    } as ParserState;
+
+    for (const token of tokens) {
+        // Ignore comments
+        if (token.type === TokenType.Comment) continue;
+
+        // KV set is done
+        completeOutstandingKvSet(state, token);
+
+        if (token.type === TokenType.Key) {
+            state.keyToken = token;
+            state.valueTokens = [];
+            continue;
+        }
+
+        if (token.type === TokenType.Value) {
+            if (state.keyToken == null) {
+                // This should never happen, but just in case.
+                continue;
+            }
+
+            state.valueTokens.push(token);
+            continue;
+        }
+
+        if (token.type === TokenType.ObjectStart) {
+            if (state.keyToken == null) {
+                const error = new ParseError(ParseErrorType.UnexpectedOpeningBrace, token.getPosition());
+                state.errors.push(error);
+                continue;
+            }
+            const key = state.keyToken.toLiteral();
+            const condition: Conditional | undefined = state.conditionToken?.toConditional();
+            const item = Item.createContainer(state.currentParent, key, [], condition);
+            item.startPopulatingContainer(token.toLiteral());
+
+            if (state.currentParent == null) {
+                state.currentParent = item;
+                state.roots.push(item);
+            } else {
+                state.currentParent.addChild(item);
+                state.currentParent = item;
+            }
+
+            state.keyToken = null;
+            state.conditionToken = null;
+            continue;
+        }
+
+        if (token.type === TokenType.ObjectEnd) {
+            if (state.currentParent == null) {
+                const error = new ParseError(ParseErrorType.UnexpectedClosingBrace, token.getPosition());
+                state.errors.push(error);
+            } else {
+                state.currentParent.endPopulatingContainer(token.toLiteral());
+                state.currentParent = state.currentParent.getParent();
+            }
+
+            continue;
+        }
+
+        if (token.type === TokenType.Conditional) {
+            state.conditionToken = token;
+            continue;
+        }
+    }
+
+    if (state.keyToken != null) {
+        if (state.currentParent == null) {
+            const pos = getKvSetPosition(state);
+            if (pos != null) {
+                state.errors.push(new ParseError(ParseErrorType.MissingRootObject, pos));
+            }
+        }
+    }
+
+    return new Document(state.roots, state.errors);
+}
+
+function getKvSetPosition(s: ParserState): Position | null {
+    if (s.keyToken == null) return null;
+    let end: number;
+
+    if (s.valueTokens.length > 0) {
+        end = s.valueTokens[s.valueTokens.length - 1].range.getEnd();
+    } else {
+        end = s.keyToken.range.getEnd();
+    }
+
+    const range = new Range(s.keyToken.range.getStart(), end);
+    return new Position(s.keyToken.line, range);
+}
+
+function completeOutstandingKvSet(s: ParserState, token: Token): void {
+    if (s.keyToken == null || s.keyToken.line === token.line || token.type === TokenType.ObjectStart) return;
+
+    if (s.valueTokens.length == 0) {
+        const error = new ParseError(ParseErrorType.MissingValue, s.keyToken.getPosition());
+        s.errors.push(error);
+    }
+
+    if (s.currentParent == null) {
+        const pos = getKvSetPosition(s);
+        if (pos != null) {
+            s.errors.push(new ParseError(ParseErrorType.MissingRootObject, pos));
+        }
+    } else {
+        const key = s.keyToken.toLiteral();
+        const values = s.valueTokens.map((t) => new Literal(new Position(t.line, t.range), t.value));
+        const condition: Conditional | undefined = s.conditionToken?.toConditional();
+        const item = Item.createLeaf(s.currentParent, key, values, condition);
+        s.currentParent.addChild(item);
+    }
+
+    s.keyToken = null;
+    s.valueTokens = [];
+    s.conditionToken = null;
 }

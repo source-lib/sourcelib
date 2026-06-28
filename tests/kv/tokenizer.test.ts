@@ -1,9 +1,9 @@
-import {test, expect} from "vitest";
-import { tokenize, consumeStringUnquoted } from "../../src/kv/tokenizer";
-import { TokenType } from "../../src/kv/parser-types";
+import { test, expect } from "vitest";
+import { consumeStringUnquoted, KvTokenizer } from "../../src/kv/KvTokenizer";
+import { TokenType } from "../../src/kv/KvParser";
 
 test("Tokenize Simple KV", () => {
-    const tokens = tokenize(
+    const tokens = KvTokenizer.tokenize(
         `"File"
 {
     "Keyvalues" {
@@ -45,11 +45,12 @@ test("Tokenize Simple KV", () => {
         hello "\\"world\\""
 
     }
-}`);
+}`,
+    );
     expect(tokens).toBeDefined();
     expect(tokens.length).toBe(53);
 
-    expect(tokens[0].value).toBe("\"File\"");
+    expect(tokens[0].value).toBe('"File"');
     expect(tokens[0].type).toBe(TokenType.Key);
     expect(tokens[0].line).toBe(0);
     expect(tokens[0].range.getStart()).toBe(0);
@@ -59,7 +60,7 @@ test("Tokenize Simple KV", () => {
     expect(tokens[1].line).toBe(1);
     expect(tokens[1].range.getStart()).toBe(0);
     expect(tokens[1].range.getEnd()).toBe(1);
-    expect(tokens[2].value).toBe("\"Keyvalues\"");
+    expect(tokens[2].value).toBe('"Keyvalues"');
     expect(tokens[2].type).toBe(TokenType.Key);
     expect(tokens[2].line).toBe(2);
     expect(tokens[2].range.getStart()).toBe(4);
@@ -74,22 +75,21 @@ test("Tokenize Simple KV", () => {
     expect(tokens[4].line).toBe(4);
     expect(tokens[4].range.getStart()).toBe(8);
     expect(tokens[4].range.getEnd()).toBe(20);
-    expect(tokens[5].value).toBe("\"Quoted Strings\"");
+    expect(tokens[5].value).toBe('"Quoted Strings"');
     expect(tokens[5].line).toBe(6);
     expect(tokens[5].type).toBe(TokenType.Key);
-    expect(tokens[6].value).toBe("\"a a\"");
+    expect(tokens[6].value).toBe('"a a"');
     expect(tokens[6].line).toBe(6);
     expect(tokens[6].type).toBe(TokenType.Value);
     expect(tokens[7].value).toBe("// Comment after the line");
     expect(tokens[7].line).toBe(6);
 
     expect(tokens[50].type).toBe(TokenType.Value);
-    expect(tokens[50].value).toBe("\"\\\"world\\\"\"");
-
+    expect(tokens[50].value).toBe('"\\"world\\""');
 });
 
 test("Tokenize preprocessor", () => {
-    const tokens = tokenize(`
+    const tokens = KvTokenizer.tokenize(`
     // Example file for a file with preprocessor statements
     
     #base "file_this_is_based_on.txt"
@@ -113,7 +113,7 @@ test("Tokenize preprocessor", () => {
 });
 
 test("Tokenize missing closing quote on string", () => {
-    const tokens = tokenize(`
+    const tokens = KvTokenizer.tokenize(`
     "test" {
         "key1" value1
         "key2" "value2
@@ -125,22 +125,22 @@ test("Tokenize missing closing quote on string", () => {
 
     expect(tokens.length).toBe(12);
     expect(tokens[2].type).toBe(TokenType.Key);
-    expect(tokens[2].value).toBe("\"key1\"");
+    expect(tokens[2].value).toBe('"key1"');
     expect(tokens[3].type).toBe(TokenType.Value);
     expect(tokens[3].value).toBe("value1");
 
     expect(tokens[4].type).toBe(TokenType.Key);
-    expect(tokens[4].value).toBe("\"key2\"");
+    expect(tokens[4].value).toBe('"key2"');
     expect(tokens[5].type).toBe(TokenType.Value);
-    expect(tokens[5].value).toBe("\"value2");
+    expect(tokens[5].value).toBe('"value2');
 
     expect(tokens[6].type).toBe(TokenType.Key);
-    expect(tokens[6].value).toBe("\"key3\"");
+    expect(tokens[6].value).toBe('"key3"');
     expect(tokens[7].type).toBe(TokenType.Value);
-    expect(tokens[7].value).toBe("value3\"");
+    expect(tokens[7].value).toBe('value3"');
 
     expect(tokens[8].type).toBe(TokenType.Key);
-    expect(tokens[8].value).toBe("\"key4 value4");
+    expect(tokens[8].value).toBe('"key4 value4');
 
     expect(tokens[9].type).toBe(TokenType.Key);
     expect(tokens[9].value).toBe("key5");
@@ -149,7 +149,7 @@ test("Tokenize missing closing quote on string", () => {
 });
 
 test("Tokenize multiple values", () => {
-    const tokens = tokenize(`Test {
+    const tokens = KvTokenizer.tokenize(`Test {
         "key1" "v1" v2 v3 4 // comment
     }`);
 
@@ -158,7 +158,7 @@ test("Tokenize multiple values", () => {
     expect(tokens[1].type).toBe(TokenType.ObjectStart);
     expect(tokens[2].type).toBe(TokenType.Key);
     expect(tokens[3].type).toBe(TokenType.Value);
-    expect(tokens[3].value).toBe("\"v1\"");
+    expect(tokens[3].value).toBe('"v1"');
     expect(tokens[4].type).toBe(TokenType.Value);
     expect(tokens[4].value).toBe("v2");
     expect(tokens[5].type).toBe(TokenType.Value);
@@ -168,7 +168,7 @@ test("Tokenize multiple values", () => {
 });
 
 test("Tokenize conditionals", () => {
-    const tokens = tokenize(`Test {
+    const tokens = KvTokenizer.tokenize(`Test {
         "k1" "v1" [$TEST]
         "k2" "v2" [ $TEST && ( !$DEBUG ) ]
     }`);
@@ -181,14 +181,14 @@ test("Tokenize conditionals", () => {
     expect(tokens[4].type).toBe(TokenType.Conditional);
     expect(tokens[4].value).toBe("[$TEST]");
     expect(tokens[5].type).toBe(TokenType.Key);
-    expect(tokens[5].value).toBe("\"k2\"");
+    expect(tokens[5].value).toBe('"k2"');
     expect(tokens[6].type).toBe(TokenType.Value);
     expect(tokens[7].type).toBe(TokenType.Conditional);
     expect(tokens[7].value).toBe("[ $TEST && ( !$DEBUG ) ]");
 });
 
 test("Tokenize conditionals on object", () => {
-    const tokens = tokenize(`Test {
+    const tokens = KvTokenizer.tokenize(`Test {
         "kv1" "v1"
 
         Obj [$DEBUG]
@@ -232,25 +232,19 @@ test("Consume Unquoted string", () => {
 
 // To fix https://github.com/source-lib/sourcelib/issues/1
 test("Error when / is not followed by any character", () => {
-
     const kvFile = `Test {
     "key1" "v1" /`;
 
     expect(() => {
-        tokenize(kvFile);
-
+        KvTokenizer.tokenize(kvFile);
     }).not.toThrowError();
-
-
 });
 
 test("Tokenize compile time report", () => {
-    const kvFile = 
-`"report" 
+    const kvFile = `"report" 
 {
 	"total_seconds"		"12"
 }
 `;
-    tokenize(kvFile);
+    KvTokenizer.tokenize(kvFile);
 });
-

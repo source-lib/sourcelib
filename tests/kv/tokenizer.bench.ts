@@ -1,5 +1,5 @@
 import { test } from "vitest";
-import * as tokenizer from "../../src/kv/tokenizer";
+import * as tokenizer from "../../src/kv/KvTokenizer";
 
 test("Small File", async ({ bench }) => {
     await bench("Tokenize", () => {

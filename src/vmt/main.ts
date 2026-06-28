@@ -1,11 +1,15 @@
-import { ShaderParam, ShaderParamHint } from "./shader-param";
-import { shaderParams,  internalTextures } from "./shader-param-list";
-import { ColorMatchDescription, ColorMatchParenthesisType, getColorMatches } from "./color";
-import { getMatrixMatches, matrixRegExp } from "./matrix";
+import { ShaderParam, ShaderParamHint } from "./VmtParam.js";
+import { shaderParams, internalTextures } from "./VmtParamList.js";
+import { ColorMatchDescription, ColorMatchParenthesisType, getColorMatches } from "./VmtColor.js";
+import { VmtMatrix } from "./VmtMatrix.js";
 
 export {
-    ShaderParam, ShaderParamHint,
-    ColorMatchDescription, ColorMatchParenthesisType, getColorMatches,
-    getMatrixMatches, matrixRegExp,
-    shaderParams, internalTextures
+    ShaderParam,
+    ShaderParamHint,
+    ColorMatchDescription,
+    ColorMatchParenthesisType,
+    getColorMatches,
+    VmtMatrix,
+    shaderParams,
+    internalTextures,
 };
