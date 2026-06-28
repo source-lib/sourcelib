@@ -1,10 +1,10 @@
 import { test, expect } from "vitest";
-import { populateColorTagMatches } from "../../src/captions/CaptionTags";
+import { CaptionTags } from "../../src/captions/CaptionTags";
 
 test("Caption <clr> tag", () => {
     const value = "<clr:255,125,240>This is a captions sentence with a <i>lot<i> of other <clr:25,225,212>tags";
 
-    const colors = populateColorTagMatches(value);
+    const colors = CaptionTags.getColorTags(value);
 
     expect(colors.length).toBe(2);
     expect(colors[0].color.r).toBe(255);
@@ -20,7 +20,7 @@ test("Caption <playerclr> tag", () => {
     const value =
         "<playerclr:255,125,240:255,100,30>This is a captions sentence with a <i>lot<i> of other <playerclr:25,225,212:255,0,3>tags";
 
-    const colors = populateColorTagMatches(value);
+    const colors = CaptionTags.getColorTags(value);
 
     expect(colors.length).toBe(4);
     expect(colors[0].color.r).toBe(255);
