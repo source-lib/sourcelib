@@ -14,7 +14,8 @@
         "prepublish": "npm run build",
         "build": "tsc -p ./src",
         "test": "vitest ./tests",
-        "lint": "eslint",
+        "lint": "eslint src",
+        "lint-fix": "eslint src --fix",
         "bench": "vitest bench ./tests"
     },
     "devDependencies": {
