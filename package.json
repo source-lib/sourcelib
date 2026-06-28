@@ -4,7 +4,7 @@
     "description": "Library for interfacing with source engine files",
     "repository": {
         "type": "git",
-        "url": "https://github.com/source-lib"
+        "url": "https://github.com/SecondFaceSoftware/sourcelib"
     },
     "license": "MIT",
     "author": "Stefan Heinz",
